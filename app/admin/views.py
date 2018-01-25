@@ -2,5 +2,5 @@
 from . import admin
 
 @admin.route("/")
-def home():
+def index():
     return "<h3 style='color:blue'>this is admin</h3>"
