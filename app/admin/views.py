@@ -4,7 +4,7 @@ from . import admin
 
 @admin.route("/")
 def index():
-    return "<h3 style='color:blue'>this is admin</h3>"
+    return render_template('admin/admin.html')
 
 
 @admin.route("/login")
