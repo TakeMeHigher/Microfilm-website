@@ -14,3 +14,8 @@ def login():
 @admin.route("/logout")
 def logout():
     return redirect(url_for('admin.login'))
+
+
+@admin.route("/changepwd")
+def changepwd():
+    return render_template('admin/changepwd.html')
