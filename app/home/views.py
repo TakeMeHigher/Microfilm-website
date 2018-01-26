@@ -24,9 +24,9 @@ def regist():
 def user():
     return  render_template('/home/user.html')
 
-@home.route('/changowd/')
-def changowd():
-    return  render_template('/home/changowd.html')
+@home.route('/changpwd/')
+def changpwd():
+    return  render_template('/home/changpwd.html')
 
 @home.route('/comments/')
 def comments():
