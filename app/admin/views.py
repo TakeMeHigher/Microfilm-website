@@ -49,3 +49,9 @@ def previewadd():
 @admin.route("/previewlist")
 def previewlist():
     return render_template('admin/preview_list.html')
+
+
+
+@admin.route("/userlist")
+def userlist():
+    return render_template('admin/user_list.html')
