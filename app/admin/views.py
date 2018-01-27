@@ -38,3 +38,14 @@ def addmovie():
 @admin.route("/movielist")
 def movielist():
     return render_template('admin/movie_list.html')
+
+
+
+@admin.route("/previewadd")
+def previewadd():
+    return render_template('admin/preview_add.html')
+
+
+@admin.route("/previewlist")
+def previewlist():
+    return render_template('admin/preview_list.html')
