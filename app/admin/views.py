@@ -21,8 +21,10 @@ def changepwd():
     return render_template('admin/changepwd.html')
 
 
-
-
 @admin.route("/addtag")
 def addtag():
     return render_template('admin/tag_add.html')
+
+@admin.route("/taglist")
+def taglist():
+    return render_template('admin/tag_list.html')
