@@ -70,3 +70,8 @@ def commentlist():
 @admin.route("/moviecol_list")
 def moviecol_list():
     return render_template('admin/moviecol_list.html')
+
+@admin.route('/oplog_list')
+def oplog_list():
+    return render_template('admin/oplog_list.html')
+    
