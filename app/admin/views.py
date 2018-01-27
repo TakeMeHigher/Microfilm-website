@@ -28,3 +28,8 @@ def addtag():
 @admin.route("/taglist")
 def taglist():
     return render_template('admin/tag_list.html')
+
+
+@admin.route("/addmovie")
+def addmovie():
+    return render_template('admin/movie_add.html')
