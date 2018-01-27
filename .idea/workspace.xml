@@ -22,88 +22,9 @@
         <entry file="file://$PROJECT_DIR$/app/admin/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="407">
-              <caret line="66" column="46" lean-forward="false" selection-start-line="66" selection-start-column="46" selection-end-line="66" selection-end-column="46" />
+              <caret line="71" column="47" lean-forward="false" selection-start-line="71" selection-start-column="47" selection-end-line="71" selection-end-column="47" />
               <folding>
                 <element signature="e#13#63#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="preview_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/admin/preview_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="74" column="13" lean-forward="false" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
-              <folding>
-                <element signature="n#section#0;n#!!top" expanded="false" />
-                <element signature="n#section#1;n#!!top" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/user_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5943">
-              <caret line="292" column="5" lean-forward="false" selection-start-line="292" selection-start-column="5" selection-end-line="367" selection-end-column="18" />
-              <folding>
-                <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-                <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user_view.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/user_view.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="301" column="5" lean-forward="false" selection-start-line="301" selection-start-column="5" selection-end-line="364" selection-end-column="18" />
-              <folding>
-                <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-                <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/admin/user_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="966">
-              <caret line="52" column="90" lean-forward="false" selection-start-line="52" selection-start-column="90" selection-end-line="52" selection-end-column="90" />
-              <folding>
-                <element signature="n#section#0;n#!!top" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="comment_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/templates/admin/comment_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="79" column="13" lean-forward="true" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
-              <folding>
-                <element signature="n#section#0;n#!!top" expanded="false" />
-                <element signature="n#section#1;n#!!top" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="comment_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/comment_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="292" column="0" lean-forward="false" selection-start-line="292" selection-start-column="0" selection-end-line="365" selection-end-column="18" />
-              <folding>
-                <element signature="n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-                <element signature="n#aside#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-                <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-                <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -112,9 +33,10 @@
       <file leaf-file-name="user_view.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/templates/admin/user_view.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="79" column="10" lean-forward="false" selection-start-line="79" selection-start-column="10" selection-end-line="79" selection-end-column="10" />
+            <state relative-caret-position="210">
+              <caret line="81" column="0" lean-forward="true" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
               <folding>
+                <element signature="n#style#0;n#!!top" expanded="false" />
                 <element signature="n#section#0;n#!!top" expanded="false" />
                 <element signature="n#section#1;n#!!top" expanded="false" />
               </folding>
@@ -122,11 +44,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="preview_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/preview_list.html">
+      <file leaf-file-name="moviecol_list.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/moviecol_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-111">
-              <caret line="292" column="0" lean-forward="false" selection-start-line="292" selection-start-column="0" selection-end-line="357" selection-end-column="18" />
+            <state relative-caret-position="280">
+              <caret line="292" column="5" lean-forward="false" selection-start-line="292" selection-start-column="5" selection-end-line="355" selection-end-column="18" />
               <folding>
                 <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
                 <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
@@ -135,11 +57,24 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="moviecol_list.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/templates/admin/moviecol_list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="84">
+              <caret line="66" column="10" lean-forward="false" selection-start-line="66" selection-start-column="10" selection-end-line="66" selection-end-column="10" />
+              <folding>
+                <element signature="n#section#0;n#!!top" expanded="false" />
+                <element signature="n#section#1;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="grid.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/templates/admin/grid.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="95" column="65" lean-forward="false" selection-start-line="95" selection-start-column="65" selection-end-line="95" selection-end-column="65" />
+            <state relative-caret-position="218">
+              <caret line="109" column="67" lean-forward="false" selection-start-line="109" selection-start-column="67" selection-end-line="109" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -202,6 +137,7 @@
         <option value="$PROJECT_DIR$/app/templates/admin/user_view.html" />
         <option value="$PROJECT_DIR$/app/templates/admin/user_list.html" />
         <option value="$PROJECT_DIR$/app/templates/admin/comment_list.html" />
+        <option value="$PROJECT_DIR$/app/templates/admin/moviecol_list.html" />
         <option value="$PROJECT_DIR$/app/admin/views.py" />
         <option value="$PROJECT_DIR$/app/templates/admin/grid.html" />
       </list>
@@ -453,20 +389,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/static/tpl/2-movie/nav.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/fonts/css/font-awesome.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-126">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="84">
@@ -814,17 +736,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/preview_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-111">
-          <caret line="292" column="0" lean-forward="false" selection-start-line="292" selection-start-column="0" selection-end-line="357" selection-end-column="18" />
-          <folding>
-            <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-            <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/admin/preview_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -868,17 +779,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/admin/user_view.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="79" column="10" lean-forward="false" selection-start-line="79" selection-start-column="10" selection-end-line="79" selection-end-column="10" />
-          <folding>
-            <element signature="n#section#0;n#!!top" expanded="false" />
-            <element signature="n#section#1;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/comment_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
@@ -903,10 +803,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/preview_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-97">
+          <caret line="292" column="0" lean-forward="false" selection-start-line="292" selection-start-column="0" selection-end-line="357" selection-end-column="18" />
+          <folding>
+            <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/admin/user_view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="81" column="0" lean-forward="true" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#!!top" expanded="false" />
+            <element signature="n#section#0;n#!!top" expanded="false" />
+            <element signature="n#section#1;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/tpl/3-admin/moviecol_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="292" column="5" lean-forward="false" selection-start-line="292" selection-start-column="5" selection-end-line="355" selection-end-column="18" />
+          <folding>
+            <element signature="n#section#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#section#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/admin/moviecol_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="66" column="10" lean-forward="false" selection-start-line="66" selection-start-column="10" selection-end-line="66" selection-end-column="10" />
+          <folding>
+            <element signature="n#section#0;n#!!top" expanded="false" />
+            <element signature="n#section#1;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/admin/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="407">
-          <caret line="66" column="46" lean-forward="false" selection-start-line="66" selection-start-column="46" selection-end-line="66" selection-end-column="46" />
+          <caret line="71" column="47" lean-forward="false" selection-start-line="71" selection-start-column="47" selection-end-line="71" selection-end-column="47" />
           <folding>
             <element signature="e#13#63#0" expanded="true" />
           </folding>
@@ -915,8 +860,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/admin/grid.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="95" column="65" lean-forward="false" selection-start-line="95" selection-start-column="65" selection-end-line="95" selection-end-column="65" />
+        <state relative-caret-position="218">
+          <caret line="109" column="67" lean-forward="false" selection-start-line="109" selection-start-column="67" selection-end-line="109" selection-end-column="67" />
           <folding />
         </state>
       </provider>
