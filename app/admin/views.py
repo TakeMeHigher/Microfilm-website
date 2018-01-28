@@ -1,7 +1,23 @@
 #coding:utf8
-from flask import render_template,redirect,url_for,request
+from flask import render_template,redirect,url_for,request,session,flash
 from . import admin
 from  app.admin.forms import LoginForm
+from  app.models import Admin
+from  app import db
+
+
+@admin.before_request
+def check_is_login():
+
+    if request.path=='/admin/login':
+        return None
+
+
+
+    if not session.get('admin'):
+        return redirect(url_for('admin.login'))
+
+
 
 @admin.route("/")
 def index():
@@ -16,12 +32,21 @@ def login():
     else:
         form=LoginForm(request.form)
         if form.validate():
+            data=form.data
+            #pwd=Admin.query(Admin.pwd).filter_by(name=data.get('account'))
+            pwd=db.session.query(Admin.pwd).filter_by(name=data.get('account')).first()
+            print(pwd[0],'-----')
+            if pwd[0] !=data.get('pwd'):
+                flash('密码错误')
+                return redirect(url_for('admin.login'))
+            session['admin']=data.get('account')
             return redirect(url_for('admin.index'))
         return render_template('admin/login.html', form=form)
 
 
 @admin.route("/logout")
 def logout():
+    session['admin']=''
     return redirect(url_for('admin.login'))
 
 

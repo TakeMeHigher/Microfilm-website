@@ -6,6 +6,7 @@ from wtforms.fields import core
 from wtforms import validators
 from wtforms import widgets
 
+from app.models import Admin
 
 class LoginForm(Form):
     account=simple.StringField(
@@ -31,3 +32,14 @@ class LoginForm(Form):
         widget=widgets.SubmitInput(),
         render_kw={'id':"btn-sub",'class':'btn btn-primary btn-block btn-flat'}
     )
+
+
+
+    def validate_account(self,field):
+        name=field.data
+        print(name,'-----')
+        count=Admin.query.filter_by(name=name).count()
+        if count==0:
+            raise validators.StopValidation('用户名不存在')
+
+
