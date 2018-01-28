@@ -1,15 +1,24 @@
 #coding:utf8
-from flask import render_template,redirect,url_for
+from flask import render_template,redirect,url_for,request
 from . import admin
+from  app.admin.forms import LoginForm
 
 @admin.route("/")
 def index():
     return render_template('admin/index.html')
 
 
-@admin.route("/login")
+@admin.route("/login",methods=['GET','POST'])
 def login():
-    return render_template('admin/login.html')
+    if request.method=='GET':
+        form=LoginForm()
+        return render_template('admin/login.html',form=form)
+    else:
+        form=LoginForm(request.form)
+        if form.validate():
+            return redirect(url_for('admin.index'))
+        return render_template('admin/login.html', form=form)
+
 
 @admin.route("/logout")
 def logout():
@@ -84,4 +93,11 @@ def adminloginlog_list():
 def userloginlog_list():
     return render_template('admin/userloginlog_list.html')
 
-    
+@admin.route('/admin_add')
+def admin_add():
+    return render_template('admin/admin_add.html')
+
+
+@admin.route('/admin_list')
+def admin_list():
+    return render_template('admin/admin_list.html')

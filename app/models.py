@@ -1,14 +1,5 @@
-from flask import Flask
-from  flask_sqlalchemy import SQLAlchemy
+from app import db
 import  datetime
-
-#创建app对象
-app=Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URL"]="mysql://root:root@127.0.0.1:3306/movie"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=True
-
-#实例化SQLAlchemy
-db=SQLAlchemy(app)
 
 
 #会员
