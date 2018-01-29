@@ -107,17 +107,16 @@ def edittag(id):
     form=TagForm(data={'name':tag.name})
     return render_template('admin/tag_add.html',form=form)
 
-@admin.route('/edittag/<int:id>')
+@admin.route('/deltag/<int:id>')
 def deltag(id):
     '''
     删除标签
     :param id:
     :return:
     '''
-    # tag=db.session.query(models.Tag).filter_by(id=id).first()
-    # form=TagForm(data=tag)
-    # return render_template('admin/tag_add.html',form=form)
-    pass
+    db.session.query(models.Tag).filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('admin.taglist'))
 
 
 @admin.route("/addmovie",methods=['GET','POST'])
