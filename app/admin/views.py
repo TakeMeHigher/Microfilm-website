@@ -84,7 +84,8 @@ def addtag():
 
 @admin.route("/taglist")
 def taglist():
-    return render_template('admin/tag_list.html')
+    tags=db.session.query(models.Tag).all()
+    return render_template('admin/tag_list.html',tags=tags)
 
 
 @admin.route("/addmovie",methods=['GET','POST'])
