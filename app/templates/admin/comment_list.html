@@ -41,7 +41,7 @@
                                         </span>
                                     </span>
                             关于电影<a>《{{c.movie.title}}》</a>的评论：{{c.content}}
-                            <br><a class="label label-danger pull-right">删除</a>
+                            <br><a href="{{url_for('admin.delcomment',id=c.id)}}" class="label label-danger pull-right">删除</a>
                         </div>
                     </div>
                     {% endfor %}

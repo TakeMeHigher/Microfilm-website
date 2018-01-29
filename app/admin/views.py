@@ -304,7 +304,11 @@ def commentlist():
     ).all()
     print(len(comments))
     return render_template('admin/comment_list.html',comments=comments)
-
+@admin.route('/delcomment/<int:id>')
+def delcomment(id):
+    db.session.query(models.Comment).filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('admin.commentlist'))
 
 @admin.route("/moviecol_list")
 def moviecol_list():
