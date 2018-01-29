@@ -288,7 +288,7 @@ def userview(id):
     会员详细界面
     :return:
     '''
-    user=db.session.query(models.User).filter_by(id=id).first
+    user=db.session.query(models.User).filter_by(id=id).first()
     return render_template('admin/user_view.html',user=user)
 
 
