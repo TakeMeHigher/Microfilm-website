@@ -55,7 +55,7 @@
                                     <td>{{m.ommentnum}}</td>
                                     <td>{{m.release_time}}</td>
                                     <td>
-                                        <a class="label label-success">编辑</a>
+                                        <a href="{{url_for('admin.editmovie',id=m.id)}}" class="label label-success">编辑</a>
                                         &nbsp;
                                         <a class="label label-danger">删除</a>
                                     </td>

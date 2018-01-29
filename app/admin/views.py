@@ -13,29 +13,43 @@ from  app.models import Admin
 from app import models
 from  app import db
 
-up_url=os.path.join(os.path.abspath(os.path.dirname(__file__))+'static/uploads/')
+up_url=os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads/')
 @admin.before_request
 def check_is_login():
-
+    '''
+    检测是否登录了
+    :return:
+    '''
     if request.path=='/admin/login':
         return None
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
 
-
-
 def changeFilename(filename):
+    '''
+    获取上传文件的名称
+    :param filename:
+    :return:
+    '''
     fileinfo=os.path.splitext(filename)
     filename=datetime.datetime.now().strftime('%Y%m%d%H%M%S')+str(uuid.uuid4().hex)+fileinfo[-1]
     return filename
 
 @admin.route("/")
 def index():
+    '''
+    首页
+    :return:
+    '''
     return render_template('admin/index.html')
 
 
 @admin.route("/login",methods=['GET','POST'])
 def login():
+    '''
+    登录
+    :return:
+    '''
     if request.method=='GET':
         form=LoginForm()
         return render_template('admin/login.html',form=form)
@@ -56,12 +70,20 @@ def login():
 
 @admin.route("/logout")
 def logout():
+    '''
+    注销
+    :return:
+    '''
     session['admin']=''
     return redirect(url_for('admin.login'))
 
 
 @admin.route("/changepwd")
 def changepwd():
+    '''
+    修改密码
+    :return:
+    '''
     return render_template('admin/changepwd.html')
 
 
@@ -121,6 +143,10 @@ def deltag(id):
 
 @admin.route("/addmovie",methods=['GET','POST'])
 def addmovie():
+    '''
+    添加电影
+    :return:
+    '''
     if request.method=='POST':
         form =MovieForm(request.form)
         if form.validate():
@@ -151,7 +177,7 @@ def addmovie():
             db.session.add(movie)
             db.session.commit()
             flash('添加电影成功','ok')
-            return redirect(url_for('admin.addmovie'))
+            return redirect(url_for('admin.movielist'))
 
 
         return render_template('admin/movie_add.html', form=form)
@@ -161,6 +187,10 @@ def addmovie():
 
 @admin.route("/movielist")
 def movielist():
+    '''
+    电影列表
+    :return:
+    '''
     movielist=db.session.query(models.Movie).all()
     tag_names={}
     for movie in movielist:
@@ -168,7 +198,53 @@ def movielist():
         tag_names[movie.id]=tag_name[0]
     return render_template('admin/movie_list.html',movielist=movielist,tag_names=tag_names)
 
+@admin.route('/editmovie/<int:id>',methods=['GET','POST'])
+def editmovie(id):
+    '''
+    修改电影
+    :param id:
+    :return:
+    '''
+    if request.method=='POST':
+        form =MovieForm(request.form)
+        if form.validate():
+            data=form.data
+            db.session.query(models.Movie).filter_by(id=id).update({
+            'title':data.get('title'),
+            'url':data.get('url'),
+            'info':data.get('info'),
+            'logo':data.get('logo'),
+            'star':int(data.get('star')),
+            'playnum':0,
+            'ommentnum':0,
+            'tag_id':int(data.get('tag')),
+            'area':data.get('area'),
+            'release_time':data.get('release_time'),
+            'length':data.get('length')})
 
+            db.session.commit()
+            return redirect(url_for('admin.movielist'))
+
+    movie = db.session.query(models.Movie).filter_by(id=id).first()
+    movie_dic={
+        'title':movie.title,
+        'url':movie.url,
+        'info':movie.info,
+        'logo':movie.logo,
+        'star':movie.star,
+        'playnum':movie.playnum,
+        'ommentnum':movie.ommentnum,
+        'tag_id':movie.tag_id,
+        'area':movie.area,
+        'release_time':movie.release_time,
+        'length':movie.length
+    }
+    form=MovieForm(data=movie_dic)
+    return render_template('admin/movie_add.html', form=form)
+
+@admin.route('/delmovie/<int:id>')
+def delmovie(id):
+    pass
 
 @admin.route("/previewadd")
 def previewadd():
