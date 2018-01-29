@@ -294,7 +294,16 @@ def userview(id):
 
 @admin.route("/commentlist")
 def commentlist():
-    return render_template('admin/comment_list.html')
+    '''
+    评论列表管理
+    :return:
+    '''
+    comments=db.session.query(models.Comment).join(models.User).join(
+        models.Movie).filter(models.Comment.user_id==models.User.id).filter(
+        models.Comment.movie_id==models.Movie.id
+    ).all()
+    print(len(comments))
+    return render_template('admin/comment_list.html',comments=comments)
 
 
 @admin.route("/moviecol_list")
