@@ -12,6 +12,7 @@ from  app.admin.forms import LoginForm,MovieForm,TagForm
 from  app.models import Admin
 from app import models
 from  app import db
+from  app.utils.pager import Pagination
 
 up_url=os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads/')
 @admin.before_request
@@ -266,11 +267,27 @@ def previewlist():
 
 @admin.route("/userlist")
 def userlist():
-    return render_template('admin/user_list.html')
+    '''
+    会员列表
+    :return:
+    '''
+    users=db.session.query(models.User).all()
+
+    current_page = request.args.get('page', 1)
+    total_count = len(users)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj=Pagination(current_page,total_count,base_url,parmas)
+    users=users[pageObj.start:pageObj.end]
+    return render_template('admin/user_list.html',users=users,pageObj=pageObj)
 
 
 @admin.route("/userview")
 def userview():
+    '''
+    
+    :return:
+    '''
     return render_template('admin/user_view.html')
 
 

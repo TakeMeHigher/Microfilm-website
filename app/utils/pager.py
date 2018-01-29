@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 class Pagination(object):
-    def __init__(self, current_page, totalCount, base_url,parmas, per_page_count=10, max_page_count=11):
+    def __init__(self, current_page, totalCount, base_url,parmas, per_page_count=5, max_page_count=11):
         try:
             current_page = int(current_page)
         except:
