@@ -84,8 +84,40 @@ def addtag():
 
 @admin.route("/taglist")
 def taglist():
+    '''
+    标签列表
+    :return:
+    '''
     tags=db.session.query(models.Tag).all()
     return render_template('admin/tag_list.html',tags=tags)
+
+@admin.route('/edittag/<int:id>',methods=['GET','POST'])
+def edittag(id):
+    '''
+    编辑标签
+    :param id:
+    :return:
+    '''
+    if request.method=='POST':
+        form=TagForm(request.form)
+        db.session.query(models.Tag).filter_by(id=id).update({'name':form.data.get('name')})
+        db.session.commit()
+        return redirect(url_for('admin.taglist'))
+    tag=db.session.query(models.Tag).filter_by(id=id).first()
+    form=TagForm(data={'name':tag.name})
+    return render_template('admin/tag_add.html',form=form)
+
+@admin.route('/edittag/<int:id>')
+def deltag(id):
+    '''
+    删除标签
+    :param id:
+    :return:
+    '''
+    # tag=db.session.query(models.Tag).filter_by(id=id).first()
+    # form=TagForm(data=tag)
+    # return render_template('admin/tag_add.html',form=form)
+    pass
 
 
 @admin.route("/addmovie",methods=['GET','POST'])
