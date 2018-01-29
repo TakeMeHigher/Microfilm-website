@@ -282,13 +282,14 @@ def userlist():
     return render_template('admin/user_list.html',users=users,pageObj=pageObj)
 
 
-@admin.route("/userview")
-def userview():
+@admin.route("/userview/<int:id>")
+def userview(id):
     '''
-    
+    会员详细界面
     :return:
     '''
-    return render_template('admin/user_view.html')
+    user=db.session.query(models.User).filter_by(id=id).first
+    return render_template('admin/user_view.html',user=user)
 
 
 @admin.route("/commentlist")

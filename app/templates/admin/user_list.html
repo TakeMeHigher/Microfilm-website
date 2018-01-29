@@ -41,7 +41,7 @@
                         </tr>
                         {% for user in users %}
                         <tr>
-                            <td>{{user.id}}</td>
+                            <td>{{loop.index}}</td>
                             <td>{{user.name}}</td>
                             <td>{{user.email}}</td>
                             <td>{{user.phone}}</td>
@@ -51,7 +51,7 @@
                             <td>正常/冻结</td>
                             <td>{{user.regtime}}</td>
                             <td>
-                                <a class="label label-success" href="{{url_for('admin.userview')}}">查看</a>
+                                <a class="label label-success" href="{{url_for('admin.userview',id=user.id)}}">查看</a>
                                 &nbsp;
                                 <a class="label label-info">解冻</a>
                                 &nbsp;
