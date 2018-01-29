@@ -144,6 +144,18 @@ class MovieForm(Form):
         self.tag.choices=db.session.query(models.Tag.id,models.Tag.name).all()
 
 
+class TagForm(Form):
+    name = simple.StringField(
+        label='标签名',
+        validators=[
+            validators.DataRequired(message='标签名不能为空')
+        ],
+        render_kw={'class': "form-control", 'placeholder': "请输入标签名!", 'id': "input_name"},
+        widget=widgets.TextInput()
+    )
+
+
+
 
 
 

@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm,MovieForm
+from  app.admin.forms import LoginForm,MovieForm,TagForm
 from  app.models import Admin
 from app import models
 from  app import db
@@ -65,9 +65,22 @@ def changepwd():
     return render_template('admin/changepwd.html')
 
 
-@admin.route("/addtag")
+@admin.route("/addtag",methods=['GET','POST'])
 def addtag():
-    return render_template('admin/tag_add.html')
+    '''
+    添加标签
+    :return:
+    '''
+    if request.method=='POST':
+        form=TagForm(request.form)
+        tag=models.Tag(
+            name=form.data.get('name')
+        )
+        db.session.add(tag)
+        db.session.commit()
+        return redirect(url_for('admin.taglist'))
+    form=TagForm()
+    return render_template('admin/tag_add.html',form=form)
 
 @admin.route("/taglist")
 def taglist():
