@@ -244,7 +244,14 @@ def editmovie(id):
 
 @admin.route('/delmovie/<int:id>')
 def delmovie(id):
-    pass
+    '''
+    删除电影
+    :param id:
+    :return:
+    '''
+    db.session.query(models.Movie).filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('admin.movielist'))
 
 @admin.route("/previewadd")
 def previewadd():
