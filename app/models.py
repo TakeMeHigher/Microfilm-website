@@ -67,8 +67,8 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), unique=True)
     url = db.Column(db.String(255), unique=True)
-    info = db.Column(db.Text)
-    logo = db.Column(db.String(255), unique=True)
+    info = db.Column(db.Text)#简介
+    logo = db.Column(db.String(255), unique=True)#封面
     star = db.Column(db.SmallInteger)
     playnum = db.Column(db.BigInteger)
     ommentnum = db.Column(db.BigInteger)

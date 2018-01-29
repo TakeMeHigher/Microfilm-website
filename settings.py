@@ -1,3 +1,4 @@
+import os
 class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:root@127.0.0.1:3306/movie?charset=utf8"
     SQLALCHEMY_POOL_SIZE = 2
@@ -5,6 +6,8 @@ class BaseConfig(object):
     SQLALCHEMY_POOL_RECYCLE = -1
 
     SECRET_KEY = 'CTZ'
+
+    UP_DIR=os.path.join(os.path.abspath(os.path.dirname(__file__)))+'static/uploads/'
 
     # 追踪对象的修改并且发送信号
     SQLALCHEMY_TRACK_MODIFICATIONS = False

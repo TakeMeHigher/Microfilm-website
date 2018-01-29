@@ -1,23 +1,33 @@
 #coding:utf8
+import os
+import uuid
+import datetime
+
 from flask import render_template,redirect,url_for,request,session,flash
+from werkzeug.utils import secure_filename
+
+import app
 from . import admin
-from  app.admin.forms import LoginForm
+from  app.admin.forms import LoginForm,MovieForm
 from  app.models import Admin
+from app import models
 from  app import db
 
-
+up_url=os.path.join(os.path.abspath(os.path.dirname(__file__))+'static/uploads/')
 @admin.before_request
 def check_is_login():
 
     if request.path=='/admin/login':
         return None
-
-
-
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
 
 
+
+def changeFilename(filename):
+    fileinfo=os.path.splitext(filename)
+    filename=datetime.datetime.now().strftime('%Y%m%d%H%M%S')+str(uuid.uuid4().hex)+fileinfo[-1]
+    return filename
 
 @admin.route("/")
 def index():
@@ -64,14 +74,54 @@ def taglist():
     return render_template('admin/tag_list.html')
 
 
-@admin.route("/addmovie")
+@admin.route("/addmovie",methods=['GET','POST'])
 def addmovie():
-    return render_template('admin/movie_add.html')
+    if request.method=='POST':
+        form =MovieForm(request.form)
+        if form.validate():
+            data =form.data
+
+            file_url=secure_filename(form.url.data)
+            file_logo=secure_filename(form.logo.data)
+
+            if not os.path.exists(up_url):
+                os.makedirs(up_url)
+                os.chmod(up_url,'rw')
+            url=changeFilename(file_url)
+            logo=changeFilename(file_logo)
+            movie=models.Movie(
+                title=data.get('title'),
+                url=url,
+                info=data.get('info'),
+                logo=logo,
+                star=int(data.get('star')),
+                playnum=0,
+                ommentnum=0,
+                tag_id=int(data.get('tag')),
+                area=data.get('area'),
+                release_time=data.get('release_time'),
+                length=data.get('length'),
+
+            )
+            db.session.add(movie)
+            db.session.commit()
+            flash('添加电影成功','ok')
+            return redirect(url_for('admin.addmovie'))
+
+
+        return render_template('admin/movie_add.html', form=form)
+    form=MovieForm()
+    return render_template('admin/movie_add.html',form=form)
 
 
 @admin.route("/movielist")
 def movielist():
-    return render_template('admin/movie_list.html')
+    movielist=db.session.query(models.Movie).all()
+    tag_names={}
+    for movie in movielist:
+        tag_name=db.session.query(models.Tag.name).filter_by(id=movie.tag_id).first()
+        tag_names[movie.id]=tag_name[0]
+    return render_template('admin/movie_list.html',movielist=movielist,tag_names=tag_names)
 
 
 
