@@ -1,24 +1,20 @@
-#coding:utf8
+# coding:utf8
 import os
 import uuid
 import datetime
 
-from flask import render_template,redirect,url_for,request,session,flash
+from flask import render_template, redirect, url_for, request, session, flash
 from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm,MovieForm,TagForm,PwdForm
+from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm
 from  app.models import Admin
 from app import models
 from  app import db
 from  app.utils.pager import Pagination
 
-
-
-
-up_url=os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads/')
-
+up_url = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/uploads/')
 
 
 def getAdmin():
@@ -30,7 +26,8 @@ def getAdmin():
     admin = db.session.query(models.Admin).filter_by(name=username).first()
     return admin
 
-def getOplog(ip,admin_id,reason):
+
+def getOplog(ip, admin_id, reason):
     '''
     添加操作日志
     :param ip:
@@ -49,10 +46,11 @@ def check_is_login():
     检测是否登录了
     :return:
     '''
-    if request.path=='/admin/login':
+    if request.path == '/admin/login':
         return None
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
+
 
 def changeFilename(filename):
     '''
@@ -60,9 +58,10 @@ def changeFilename(filename):
     :param filename:
     :return:
     '''
-    fileinfo=os.path.splitext(filename)
-    filename=datetime.datetime.now().strftime('%Y%m%d%H%M%S')+str(uuid.uuid4().hex)+fileinfo[-1]
+    fileinfo = os.path.splitext(filename)
+    filename = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + str(uuid.uuid4().hex) + fileinfo[-1]
     return filename
+
 
 @admin.route("/")
 def index():
@@ -73,28 +72,28 @@ def index():
     return render_template('admin/index.html')
 
 
-@admin.route("/login",methods=['GET','POST'])
+@admin.route("/login", methods=['GET', 'POST'])
 def login():
     '''
     登录
     :return:
     '''
-    if request.method=='GET':
-        form=LoginForm()
-        return render_template('admin/login.html',form=form)
+    if request.method == 'GET':
+        form = LoginForm()
+        return render_template('admin/login.html', form=form)
     else:
-        form=LoginForm(request.form)
+        form = LoginForm(request.form)
         if form.validate():
-            data=form.data
-            #pwd=Admin.query(Admin.pwd).filter_by(name=data.get('account'))
-            pwd=db.session.query(Admin.pwd).filter_by(name=data.get('account')).first()
-            print(pwd[0],'-----')
-            if pwd[0] !=data.get('pwd'):
+            data = form.data
+            # pwd=Admin.query(Admin.pwd).filter_by(name=data.get('account'))
+            pwd = db.session.query(Admin.pwd).filter_by(name=data.get('account')).first()
+            print(pwd[0], '-----')
+            if pwd[0] != data.get('pwd'):
                 flash('密码错误')
                 return redirect(url_for('admin.login'))
-            session['admin']=data.get('account')
-            admin=getAdmin()
-            adminlog=models.Adminlog(ip=request.remote_addr,admin_id=admin.id)
+            session['admin'] = data.get('account')
+            admin = getAdmin()
+            adminlog = models.Adminlog(ip=request.remote_addr, admin_id=admin.id)
             db.session.add(adminlog)
             db.session.commit()
             return redirect(url_for('admin.index'))
@@ -107,54 +106,55 @@ def logout():
     注销
     :return:
     '''
-    session['admin']=''
+    session['admin'] = ''
     return redirect(url_for('admin.login'))
 
 
-@admin.route("/changepwd",methods=['GET','POST'])
+@admin.route("/changepwd", methods=['GET', 'POST'])
 def changepwd():
     '''
     修改密码
     :return:
     '''
-    if request.method=='POST':
-        form =PwdForm(request.form)
+    if request.method == 'POST':
+        form = PwdForm(request.form)
         if form.validate():
-            oldpwd=form.data.get('oldpwd')
-            admin=db.session.query(models.Admin).filter_by(pwd=oldpwd).first()
+            oldpwd = form.data.get('oldpwd')
+            admin = db.session.query(models.Admin).filter_by(pwd=oldpwd).first()
             if admin:
-                username=session.get('admin')
-                db.session.query(models.Admin).filter_by(name=username).update({'pwd':form.data.get('newpwd')})
-                getOplog(ip=request.remote_addr,admin_id=admin.id,reason='%s修改了密码'%admin.name)
+                username = session.get('admin')
+                db.session.query(models.Admin).filter_by(name=username).update({'pwd': form.data.get('newpwd')})
+                getOplog(ip=request.remote_addr, admin_id=admin.id, reason='%s修改了密码' % admin.name)
                 db.session.commit()
-                session['admin']=''
+                session['admin'] = ''
                 return redirect(url_for('admin.login'))
             else:
-                msg='旧密码输入错误'
-                return  render_template('admin/changepwd.html',form=form,msg=msg)
+                msg = '旧密码输入错误'
+                return render_template('admin/changepwd.html', form=form, msg=msg)
         return render_template('admin/changepwd.html', form=form)
-    form=PwdForm()
-    return render_template('admin/changepwd.html',form=form)
+    form = PwdForm()
+    return render_template('admin/changepwd.html', form=form)
 
 
-@admin.route("/addtag",methods=['GET','POST'])
+@admin.route("/addtag", methods=['GET', 'POST'])
 def addtag():
     '''
     添加标签
     :return:
     '''
-    if request.method=='POST':
-        form=TagForm(request.form)
-        tag=models.Tag(
+    if request.method == 'POST':
+        form = TagForm(request.form)
+        tag = models.Tag(
             name=form.data.get('name')
         )
         db.session.add(tag)
-        admin=getAdmin()
-        getOplog(ip=request.remote_addr, admin_id=admin.id, reason='%s添加了%s标签'%(admin.name,form.data.get('name')))
+        admin = getAdmin()
+        getOplog(ip=request.remote_addr, admin_id=admin.id, reason='%s添加了%s标签' % (admin.name, form.data.get('name')))
         db.session.commit()
         return redirect(url_for('admin.taglist'))
-    form=TagForm()
-    return render_template('admin/tag_add.html',form=form)
+    form = TagForm()
+    return render_template('admin/tag_add.html', form=form)
+
 
 @admin.route("/taglist")
 def taglist():
@@ -162,27 +162,30 @@ def taglist():
     标签列表
     :return:
     '''
-    tags=db.session.query(models.Tag).all()
-    return render_template('admin/tag_list.html',tags=tags)
+    tags = db.session.query(models.Tag).all()
+    return render_template('admin/tag_list.html', tags=tags)
 
-@admin.route('/edittag/<int:id>',methods=['GET','POST'])
+
+@admin.route('/edittag/<int:id>', methods=['GET', 'POST'])
 def edittag(id):
     '''
     编辑标签
     :param id:
     :return:
     '''
-    if request.method=='POST':
-        form=TagForm(request.form)
-        tag=db.session.query(models.Tag).filter_by(id=id).first()
-        db.session.query(models.Tag).filter_by(id=id).update({'name':form.data.get('name')})
-        admin=getAdmin()
-        getOplog(ip=request.remote_addr,admin_id=admin.id,reason='%s将标签%s修改为了%s'%(admin.name,tag.name,form.data.get('name')))
+    if request.method == 'POST':
+        form = TagForm(request.form)
+        tag = db.session.query(models.Tag).filter_by(id=id).first()
+        db.session.query(models.Tag).filter_by(id=id).update({'name': form.data.get('name')})
+        admin = getAdmin()
+        getOplog(ip=request.remote_addr, admin_id=admin.id,
+                 reason='%s将标签%s修改为了%s' % (admin.name, tag.name, form.data.get('name')))
         db.session.commit()
         return redirect(url_for('admin.taglist'))
-    tag=db.session.query(models.Tag).filter_by(id=id).first()
-    form=TagForm(data={'name':tag.name})
-    return render_template('admin/tag_add.html',form=form)
+    tag = db.session.query(models.Tag).filter_by(id=id).first()
+    form = TagForm(data={'name': tag.name})
+    return render_template('admin/tag_add.html', form=form)
+
 
 @admin.route('/deltag/<int:id>')
 def deltag(id):
@@ -191,7 +194,7 @@ def deltag(id):
     :param id:
     :return:
     '''
-    tag=db.session.query(models.Tag).filter_by(id=id)
+    tag = db.session.query(models.Tag).filter_by(id=id)
     db.session.query(models.Tag).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -201,26 +204,26 @@ def deltag(id):
     return redirect(url_for('admin.taglist'))
 
 
-@admin.route("/addmovie",methods=['GET','POST'])
+@admin.route("/addmovie", methods=['GET', 'POST'])
 def addmovie():
     '''
     添加电影
     :return:
     '''
-    if request.method=='POST':
-        form =MovieForm(request.form)
+    if request.method == 'POST':
+        form = MovieForm(request.form)
         if form.validate():
-            data =form.data
+            data = form.data
 
-            file_url=secure_filename(form.url.data)
-            file_logo=secure_filename(form.logo.data)
+            file_url = secure_filename(form.url.data)
+            file_logo = secure_filename(form.logo.data)
 
             if not os.path.exists(up_url):
                 os.makedirs(up_url)
-                os.chmod(up_url,'rw')
-            url=changeFilename(file_url)
-            logo=changeFilename(file_logo)
-            movie=models.Movie(
+                os.chmod(up_url, 'rw')
+            url = changeFilename(file_url)
+            logo = changeFilename(file_logo)
+            movie = models.Movie(
                 title=data.get('title'),
                 url=url,
                 info=data.get('info'),
@@ -239,13 +242,12 @@ def addmovie():
             getOplog(ip=request.remote_addr, admin_id=admin.id,
                      reason='%s添加了电影%s' % (admin.name, data.get('title')))
             db.session.commit()
-            flash('添加电影成功','ok')
+            flash('添加电影成功', 'ok')
             return redirect(url_for('admin.movielist'))
 
-
         return render_template('admin/movie_add.html', form=form)
-    form=MovieForm()
-    return render_template('admin/movie_add.html',form=form)
+    form = MovieForm()
+    return render_template('admin/movie_add.html', form=form)
 
 
 @admin.route("/movielist")
@@ -254,36 +256,37 @@ def movielist():
     电影列表
     :return:
     '''
-    movielist=db.session.query(models.Movie).all()
-    tag_names={}
+    movielist = db.session.query(models.Movie).all()
+    tag_names = {}
     for movie in movielist:
-        tag_name=db.session.query(models.Tag.name).filter_by(id=movie.tag_id).first()
-        tag_names[movie.id]=tag_name[0]
-    return render_template('admin/movie_list.html',movielist=movielist,tag_names=tag_names)
+        tag_name = db.session.query(models.Tag.name).filter_by(id=movie.tag_id).first()
+        tag_names[movie.id] = tag_name[0]
+    return render_template('admin/movie_list.html', movielist=movielist, tag_names=tag_names)
 
-@admin.route('/editmovie/<int:id>',methods=['GET','POST'])
+
+@admin.route('/editmovie/<int:id>', methods=['GET', 'POST'])
 def editmovie(id):
     '''
     修改电影
     :param id:
     :return:
     '''
-    if request.method=='POST':
-        form =MovieForm(request.form)
+    if request.method == 'POST':
+        form = MovieForm(request.form)
         if form.validate():
-            data=form.data
+            data = form.data
             db.session.query(models.Movie).filter_by(id=id).update({
-            'title':data.get('title'),
-            'url':data.get('url'),
-            'info':data.get('info'),
-            'logo':data.get('logo'),
-            'star':int(data.get('star')),
-            'playnum':0,
-            'ommentnum':0,
-            'tag_id':int(data.get('tag')),
-            'area':data.get('area'),
-            'release_time':data.get('release_time'),
-            'length':data.get('length')})
+                'title': data.get('title'),
+                'url': data.get('url'),
+                'info': data.get('info'),
+                'logo': data.get('logo'),
+                'star': int(data.get('star')),
+                'playnum': 0,
+                'ommentnum': 0,
+                'tag_id': int(data.get('tag')),
+                'area': data.get('area'),
+                'release_time': data.get('release_time'),
+                'length': data.get('length')})
 
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -292,21 +295,22 @@ def editmovie(id):
             return redirect(url_for('admin.movielist'))
 
     movie = db.session.query(models.Movie).filter_by(id=id).first()
-    movie_dic={
-        'title':movie.title,
-        'url':movie.url,
-        'info':movie.info,
-        'logo':movie.logo,
-        'star':movie.star,
-        'playnum':movie.playnum,
-        'ommentnum':movie.ommentnum,
-        'tag_id':movie.tag_id,
-        'area':movie.area,
-        'release_time':movie.release_time,
-        'length':movie.length
+    movie_dic = {
+        'title': movie.title,
+        'url': movie.url,
+        'info': movie.info,
+        'logo': movie.logo,
+        'star': movie.star,
+        'playnum': movie.playnum,
+        'ommentnum': movie.ommentnum,
+        'tag_id': movie.tag_id,
+        'area': movie.area,
+        'release_time': movie.release_time,
+        'length': movie.length
     }
-    form=MovieForm(data=movie_dic)
+    form = MovieForm(data=movie_dic)
     return render_template('admin/movie_add.html', form=form)
+
 
 @admin.route('/delmovie/<int:id>')
 def delmovie(id):
@@ -315,13 +319,14 @@ def delmovie(id):
     :param id:
     :return:
     '''
-    movie=db.session.query(models.Movie).filter_by(id=id)
+    movie = db.session.query(models.Movie).filter_by(id=id)
     db.session.query(models.Movie).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
              reason='%s删除了电影%s' % (admin.name, movie.title))
     db.session.commit()
     return redirect(url_for('admin.movielist'))
+
 
 @admin.route("/previewadd")
 def previewadd():
@@ -333,22 +338,21 @@ def previewlist():
     return render_template('admin/preview_list.html')
 
 
-
 @admin.route("/userlist")
 def userlist():
     '''
     会员列表
     :return:
     '''
-    users=db.session.query(models.User).all()
+    users = db.session.query(models.User).all()
 
     current_page = request.args.get('page', 1)
     total_count = len(users)
     base_url = request.path
     parmas = request.args.to_dict()
-    pageObj=Pagination(current_page,total_count,base_url,parmas)
-    users=users[pageObj.start:pageObj.end]
-    return render_template('admin/user_list.html',users=users,pageObj=pageObj)
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    users = users[pageObj.start:pageObj.end]
+    return render_template('admin/user_list.html', users=users, pageObj=pageObj)
 
 
 @admin.route("/userview/<int:id>")
@@ -357,8 +361,8 @@ def userview(id):
     会员详细界面
     :return:
     '''
-    user=db.session.query(models.User).filter_by(id=id).first()
-    return render_template('admin/user_view.html',user=user)
+    user = db.session.query(models.User).filter_by(id=id).first()
+    return render_template('admin/user_view.html', user=user)
 
 
 @admin.route("/commentlist")
@@ -367,12 +371,14 @@ def commentlist():
     评论列表管理
     :return:
     '''
-    comments=db.session.query(models.Comment).join(models.User).join(
-        models.Movie).filter(models.Comment.user_id==models.User.id).filter(
-        models.Comment.movie_id==models.Movie.id
+    comments = db.session.query(models.Comment).join(models.User).join(
+        models.Movie).filter(models.Comment.user_id == models.User.id).filter(
+        models.Comment.movie_id == models.Movie.id
     ).all()
     print(len(comments))
-    return render_template('admin/comment_list.html',comments=comments)
+    return render_template('admin/comment_list.html', comments=comments)
+
+
 @admin.route('/delcomment/<int:id>')
 def delcomment(id):
     '''
@@ -380,13 +386,14 @@ def delcomment(id):
     :param id:
     :return:
     '''
-    con=db.session.query(models.Comment).filter_by(id=id)
+    con = db.session.query(models.Comment).filter_by(id=id)
     db.session.query(models.Comment).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
              reason='%s删除了评论%s' % (admin.name, con.content))
     db.session.commit()
     return redirect(url_for('admin.commentlist'))
+
 
 @admin.route("/moviecol_list")
 def moviecol_list():
@@ -395,10 +402,11 @@ def moviecol_list():
     :return:
     '''
 
-    moviecols=db.session.query(models.MovieCol).join(models.User).join(models.Movie).filter(
-        models.MovieCol.movie_id==models.Movie.id
-    ).filter(models.MovieCol.user_id==models.User.id).order_by(models.MovieCol.addtime.desc())
-    return render_template('admin/moviecol_list.html',moviecols=moviecols)
+    moviecols = db.session.query(models.MovieCol).join(models.User).join(models.Movie).filter(
+        models.MovieCol.movie_id == models.Movie.id
+    ).filter(models.MovieCol.user_id == models.User.id).order_by(models.MovieCol.addtime.desc())
+    return render_template('admin/moviecol_list.html', moviecols=moviecols)
+
 
 @admin.route('/delmoviecol/<int:id>')
 def delmoviecol(id):
@@ -408,8 +416,8 @@ def delmoviecol(id):
     :return:
     '''
 
-    moviecol=db.session.query(models.MovieCol).filter_by(id=id).first()
-    movie=db.session.query(models.Movie).filter_by(id=moviecol.movie_id).first()
+    moviecol = db.session.query(models.MovieCol).filter_by(id=id).first()
+    movie = db.session.query(models.Movie).filter_by(id=moviecol.movie_id).first()
     db.session.query(models.MovieCol).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -418,21 +426,22 @@ def delmoviecol(id):
     return redirect(url_for('admin.moviecol_list'))
 
 
-
-
 @admin.route('/oplog_list')
 def oplog_list():
-    oplogs=db.session.query(models.Oplog).all()
-    return render_template('admin/oplog_list.html',oplogs=oplogs)
+    oplogs = db.session.query(models.Oplog).all()
+    return render_template('admin/oplog_list.html', oplogs=oplogs)
 
 
 @admin.route('/adminloginlog_list')
 def adminloginlog_list():
-    return render_template('admin/adminloginlog_list.html')
+    adminlogs=db.session.query(models.Adminlog).all()
+    return render_template('admin/adminloginlog_list.html',adminlogs=adminlogs)
+
 
 @admin.route('/userloginlog_list')
 def userloginlog_list():
     return render_template('admin/userloginlog_list.html')
+
 
 @admin.route('/admin_add')
 def admin_add():
