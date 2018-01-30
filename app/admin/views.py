@@ -63,9 +63,14 @@ def check_is_login():
     for id in auths:
         url=db.session.query(models.Auth.url).filter_by(id=id).first()
         urls.append(url[0])
-    # if request.path not in urls:
-    #     return '无权访问'
-    #
+
+    print(request.url_rule,type(request.url_rule))
+    print(request.path)
+    print(urls)
+    print(str(request.url_rule) in urls)
+    if str(request.url_rule) not in urls:
+        return '无权访问'
+
 
 
 
@@ -82,7 +87,7 @@ def changeFilename(filename):
     return filename
 
 
-@admin.route("/")
+@admin.route("/index")
 def index():
     '''
     首页
