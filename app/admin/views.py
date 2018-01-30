@@ -146,7 +146,7 @@ def addtag():
         )
         db.session.add(tag)
         admin=getAdmin()
-        getOplog(ip=request.remote_addr, admin_id=admin.id, reason='%s添加了标签%s'%(admin.name,form.data.get('name')))
+        getOplog(ip=request.remote_addr, admin_id=admin.id, reason='%s添加了%s标签'%(admin.name,form.data.get('name')))
         db.session.commit()
         return redirect(url_for('admin.taglist'))
     form=TagForm()
@@ -191,7 +191,7 @@ def deltag(id):
     db.session.query(models.Tag).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
-             reason='%s将标签%s删除了' % (admin.name, tag.name))
+             reason='%s将%s标签删除了' % (admin.name, tag.name))
     db.session.commit()
 
     return redirect(url_for('admin.taglist'))
@@ -231,6 +231,9 @@ def addmovie():
 
             )
             db.session.add(movie)
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s添加了电影%s' % (admin.name, data.get('title')))
             db.session.commit()
             flash('添加电影成功','ok')
             return redirect(url_for('admin.movielist'))
@@ -278,6 +281,9 @@ def editmovie(id):
             'release_time':data.get('release_time'),
             'length':data.get('length')})
 
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s修改了电影%s' % (admin.name, data.get('title')))
             db.session.commit()
             return redirect(url_for('admin.movielist'))
 
@@ -305,7 +311,11 @@ def delmovie(id):
     :param id:
     :return:
     '''
+    movie=db.session.query(models.Movie).filter_by(id=id)
     db.session.query(models.Movie).filter_by(id=id).delete()
+    admin = getAdmin()
+    getOplog(ip=request.remote_addr, admin_id=admin.id,
+             reason='%s删除了电影%s' % (admin.name, movie.title))
     db.session.commit()
     return redirect(url_for('admin.movielist'))
 
@@ -366,7 +376,11 @@ def delcomment(id):
     :param id:
     :return:
     '''
+    con=db.session.query(models.Comment).filter_by(id=id)
     db.session.query(models.Comment).filter_by(id=id).delete()
+    admin = getAdmin()
+    getOplog(ip=request.remote_addr, admin_id=admin.id,
+             reason='%s删除了评论%s' % (admin.name, con.content))
     db.session.commit()
     return redirect(url_for('admin.commentlist'))
 
@@ -389,9 +403,16 @@ def delmoviecol(id):
     :param id:
     :return:
     '''
-    db.session.query(models.MovieCol).filter_by(id=id).delete()
-    db.session.commit()
-    return redirect(url_for('admin.moviecol_list'))
+    try:
+        moviecol=db.session.query(models.MovieCol).filter_by(id=id).first()
+        movie=db.session.query(models.Movie).filter_by(id=moviecol.movie_id).first()
+        db.session.query(models.MovieCol).filter_by(id=id).delete()
+        admin = getAdmin()
+        getOplog(ip=request.remote_addr, admin_id=admin.id,
+                 reason='%s删除了电影收藏%s' % (admin.name, movie.title))
+        db.session.commit()
+        return redirect(url_for('admin.moviecol_list'))
+
 
 
 
