@@ -15,8 +15,7 @@ from  app import db
 from  app.utils.pager import Pagination
 
 
-#获取访问者的Ip
-IP=request.remote_addr
+
 
 up_url=os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads/')
 
@@ -31,6 +30,17 @@ def getAdmin():
     admin = db.session.query(models.Admin).filter_by(name=username).first()
     return admin
 
+def getOplog(ip,admin_id,reason):
+    '''
+    添加操作日志
+    :param ip:
+    :param admin_id:
+    :param reasone:
+    :return:
+    '''
+    oplog = models.Oplog(ip=ip, admin_id=admin_id, reason=reason)
+    db.session.add(oplog)
+    db.session.commit()
 
 
 @admin.before_request
@@ -111,10 +121,8 @@ def changepwd():
             if admin:
                 username=session.get('admin')
                 db.session.query(models.Admin).filter_by(name=username).update({'pwd':form.data.get('newpwd')})
-                oplog=models.Oplog(ip=IP,admin_id=admin.id,reason='%s修改了密码'%admin.name)
-                db.session.add(oplog)
+                getOplog(ip=request.remote_addr,admin_id=admin.id,reason='%s修改了密码'%admin.name)
                 db.session.commit()
-
                 session['admin']=''
                 return redirect(url_for('admin.login'))
             else:
@@ -137,9 +145,8 @@ def addtag():
             name=form.data.get('name')
         )
         db.session.add(tag)
-        oplog = models.Oplog(ip=IP, admin_id=admin.id, reason='%s修改了密码' % admin.name)
-        db.session.add(oplog)
-        db.session.commit()
+        admin=getAdmin()
+        getOplog(ip=request.remote_addr, admin_id=admin.id, reason='%s添加了标签%s'%(admin.name,form.data.get('name')))
         db.session.commit()
         return redirect(url_for('admin.taglist'))
     form=TagForm()
@@ -163,7 +170,10 @@ def edittag(id):
     '''
     if request.method=='POST':
         form=TagForm(request.form)
+        tag=db.session.query(models.Tag).filter_by(id=id).first()
         db.session.query(models.Tag).filter_by(id=id).update({'name':form.data.get('name')})
+        admin=getAdmin()
+        getOplog(ip=request.remote_addr,admin_id=admin.id,reason='%s将标签%s修改为了%s'%(admin.name,tag.name,form.data.get('name')))
         db.session.commit()
         return redirect(url_for('admin.taglist'))
     tag=db.session.query(models.Tag).filter_by(id=id).first()
@@ -177,8 +187,13 @@ def deltag(id):
     :param id:
     :return:
     '''
+    tag=db.session.query(models.Tag).filter_by(id=id)
     db.session.query(models.Tag).filter_by(id=id).delete()
+    admin = getAdmin()
+    getOplog(ip=request.remote_addr, admin_id=admin.id,
+             reason='%s将标签%s删除了' % (admin.name, tag.name))
     db.session.commit()
+
     return redirect(url_for('admin.taglist'))
 
 
