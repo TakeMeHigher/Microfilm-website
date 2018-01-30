@@ -178,14 +178,22 @@ class PwdForm(Form):
     )
 
 
-class  Auth(Form):
+class  AuthForm(Form):
     name=simple.StringField(
         label='权限名称',
         validators=[
             validators.DataRequired(message='权限名称不能为空')
         ],
         widget=widgets.TextInput(),
-        render_kw={}
+        render_kw={'class':"form-control",'id':"input_name",'placeholder':"请输入权限名称！"}
+    )
+    url=simple.StringField(
+        label='权限地址',
+        validators=[
+            validators.DataRequired(message='权限地址不能为空')
+        ],
+        widget=widgets.TextInput(),
+        render_kw={'class': "form-control", 'id': "input_url", 'placeholder': "请输入权限地址！"}
     )
 
 

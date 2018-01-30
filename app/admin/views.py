@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm
+from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm
 from  app.models import Admin
 from app import models
 from  app import db
@@ -457,7 +457,43 @@ def userloginlog_list():
 
 @admin.route('/addAuth',methods=['GET', 'POST'])
 def addAuth():
-    return render_template('admin/addAuth.html')
+    '''
+    添加权限
+    :return:
+    '''
+    if request.method=='POST':
+        form=AuthForm(request.form)
+        if form.validate():
+            data=form.data
+            auth=models.Auth(name=data.get('name'),url=data.get('url'))
+            db.session.add(auth)
+
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s增加了权限%s' % (admin.name,data.get('name')))
+            db.session.commit()
+            return redirect(url_for('admin.authlist'))
+        return render_template('admin/addAuth.html', form=form)
+    form=AuthForm()
+    return render_template('admin/addAuth.html',form=form)
+
+@admin.route('/authlist')
+def authlist():
+    '''
+    权限列表
+    :return:
+    '''
+    auths=db.session.query(models.Auth).all()
+    return render_template('admin/authlist.html',auths=auths)
+
+@admin.route('/editauth/<int:id>',methods=['GET', 'POST'])
+def editauth(id):
+    pass
+
+@admin.route('/editauth/<int:id>')
+def delauth(id):
+    pass
+
 
 @admin.route('/admin_add')
 def admin_add():
