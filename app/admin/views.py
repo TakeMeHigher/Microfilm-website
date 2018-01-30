@@ -306,13 +306,30 @@ def commentlist():
     return render_template('admin/comment_list.html',comments=comments)
 @admin.route('/delcomment/<int:id>')
 def delcomment(id):
+    '''
+    删除评论
+    :param id:
+    :return:
+    '''
     db.session.query(models.Comment).filter_by(id=id).delete()
     db.session.commit()
     return redirect(url_for('admin.commentlist'))
 
 @admin.route("/moviecol_list")
 def moviecol_list():
-    return render_template('admin/moviecol_list.html')
+    '''
+    电影收藏列表
+    :return:
+    '''
+
+    moviecols=db.session.query(models.MovieCol).join(models.User).join(models.Movie).filter(
+        models.MovieCol.movie_id==models.Movie.id
+    ).filter(models.MovieCol.user_id==models.User.id).order_by(models.MovieCol.addtime.desc())
+    return render_template('admin/moviecol_list.html',moviecols=moviecols)
+
+@admin.route('/delmoviecol/<int:id>')
+def delmoviecol(id):
+    pass
 
 @admin.route('/oplog_list')
 def oplog_list():
