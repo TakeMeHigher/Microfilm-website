@@ -51,6 +51,25 @@ def check_is_login():
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
 
+    admin=db.session.query(models.Admin).filter_by(name=session.get('admin')).first()
+
+    role=db.session.query(models.Role).filter_by(id=admin.role_id).first()
+
+    if '-' in role.auths:
+        auths=list(map(lambda x:int(x),role.auths.split('-')))
+    else:
+        auths=role.auths
+    urls=[]
+    for id in auths:
+        url=db.session.query(models.Auth.url).filter_by(id=id).first()
+        urls.append(url[0])
+    # if request.path not in urls:
+    #     return '无权访问'
+    #
+
+
+
+
 
 def changeFilename(filename):
     '''
