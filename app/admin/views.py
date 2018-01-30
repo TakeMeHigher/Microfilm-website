@@ -488,11 +488,37 @@ def authlist():
 
 @admin.route('/editauth/<int:id>',methods=['GET', 'POST'])
 def editauth(id):
-    pass
+    '''
+    编辑权限
+    :param id:
+    :return:
+    '''
+    if request.method=='POST':
+        form=AuthForm(request.form)
+        if form.validate():
+            data=form.data
+            db.session.query(models.Auth).filter_by(id=id).update({'name':data.get('name'),'url':data.get('url')})
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s修改了权限%s' % (admin.name, data.get('name')))
+            db.session.commit()
+            return redirect(url_for('admin.authlist'))
+        return render_template('admin/addAuth.html', form=form)
+    auth=db.session.query(models.Auth).filter_by(id=id).first()
+    form=AuthForm(data={'name':auth.name,'url':auth.url})
+    return render_template('admin/addAuth.html',form=form)
 
-@admin.route('/editauth/<int:id>')
+@admin.route('/delauth/<int:id>')
 def delauth(id):
-    pass
+    '''
+    删除权限
+    :param id:
+    :return:
+    '''
+    db.session.query(models.Auth).filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('admin.authlist'))
+
 
 
 @admin.route('/admin_add')
