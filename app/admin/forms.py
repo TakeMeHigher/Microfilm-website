@@ -178,7 +178,15 @@ class PwdForm(Form):
     )
 
 
-
+class  Auth(Form):
+    name=simple.StringField(
+        label='权限名称',
+        validators=[
+            validators.DataRequired(message='权限名称不能为空')
+        ],
+        widget=widgets.TextInput(),
+        render_kw={}
+    )
 
 
 

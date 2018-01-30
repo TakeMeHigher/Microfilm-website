@@ -428,20 +428,36 @@ def delmoviecol(id):
 
 @admin.route('/oplog_list')
 def oplog_list():
+    '''
+    操作日志列表
+    :return:
+    '''
     oplogs = db.session.query(models.Oplog).all()
     return render_template('admin/oplog_list.html', oplogs=oplogs)
 
 
 @admin.route('/adminloginlog_list')
 def adminloginlog_list():
+    '''
+    管理员登录日志列表
+    :return:
+    '''
     adminlogs=db.session.query(models.Adminlog).all()
     return render_template('admin/adminloginlog_list.html',adminlogs=adminlogs)
 
 
 @admin.route('/userloginlog_list')
 def userloginlog_list():
+    '''
+    会员登录日志列表
+    :return:
+    '''
     return render_template('admin/userloginlog_list.html')
 
+
+@admin.route('/addAuth',methods=['GET', 'POST'])
+def addAuth():
+    return render_template('admin/addAuth.html')
 
 @admin.route('/admin_add')
 def admin_add():
