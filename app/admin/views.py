@@ -329,6 +329,24 @@ def moviecol_list():
 
 @admin.route('/delmoviecol/<int:id>')
 def delmoviecol(id):
+    '''
+    删除电影收藏
+    :param id:
+    :return:
+    '''
+    db.session.query(models.MovieCol).filter_by(id=id).delete()
+    db.session.commit()
+    return redirect(url_for('admin.moviecol_list'))
+
+
+
+@admin.route('/editmoviecol/<int:id>')
+def editmoviecol(id):
+    '''
+    编辑电影收藏
+    :param id:
+    :return:
+    '''
     pass
 
 @admin.route('/oplog_list')

@@ -43,9 +43,9 @@
                             <td>{{col.user.name}}</td>
                             <td>{{col.addtime}}</td>
                             <td>
-                                <a href="" class="label label-success">编辑</a>
+                                <a href="{{url_for('admin.editmoviecol',id=col.id)}}" class="label label-success">编辑</a>
                                 &nbsp;
-                                <a class="label label-danger">删除</a>
+                                <a href="{{url_for('admin.delmoviecol',id=col.id)}}" class="label label-danger">删除</a>
                             </td>
                         </tr>
                         {% endfor %}
