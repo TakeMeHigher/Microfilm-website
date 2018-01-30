@@ -514,7 +514,13 @@ def userloginlog_list():
     :return:
     '''
     userlogs=db.session.query(models.Userlog).all()
-    return render_template('admin/userloginlog_list.html',userlogs=userlogs)
+    current_page = request.args.get('page', 1)
+    total_count = len(userlogs)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    userlogs = userlogs[pageObj.start:pageObj.end]
+    return render_template('admin/userloginlog_list.html',userlogs=userlogs,pageObj=pageObj)
 
 
 @admin.route('/addAuth',methods=['GET', 'POST'])
