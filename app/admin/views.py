@@ -93,6 +93,10 @@ def login():
                 flash('密码错误')
                 return redirect(url_for('admin.login'))
             session['admin']=data.get('account')
+            admin=getAdmin()
+            adminlog=models.Adminlog(ip=request.remote_addr,admin_id=admin.id)
+            db.session.add(adminlog)
+            db.session.commit()
             return redirect(url_for('admin.index'))
         return render_template('admin/login.html', form=form)
 
