@@ -41,9 +41,9 @@
                             <td>{{role.name}}</td>
                             <td>{{role.addtime}}</td>
                             <td>
-                                <a  class="label label-success">编辑</a>
+                                <a href="{{url_for('admin.editrole',id=role.id)}}"  class="label label-success">编辑</a>
                                 &nbsp;
-                                <a class="label label-danger">删除</a>
+                                <a  href="{{url_for('admin.delrole',id=role.id)}}" class="label label-danger">删除</a>
                             </td>
                         </tr>
                         {% endfor %}

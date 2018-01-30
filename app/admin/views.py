@@ -536,7 +536,7 @@ def addrole():
             data=form.data
             role=models.Role(
                 name=data.get('name'),
-                auths=''.join(map(lambda x:str(x),data.get('auths')))
+                auths='-'.join(map(lambda x:str(x),data.get('auths')))
             )
             db.session.add(role)
             admin = getAdmin()
@@ -548,6 +548,32 @@ def addrole():
     form=RoleForm()
     return render_template('admin/addrole.html',form=form)
 
+@admin.route('/editrole/<int:id>',methods=['GET','POST'])
+def editrole(id):
+    if request.method=='POST':
+        form=RoleForm(request.form)
+        if form.validate():
+            data=form.data
+            db.session.query(models.Role).filter_by(id=id).update({'name':data.get('name'),
+                                                                   'auths':'-'.join(map(lambda x:str(x),data.get('auths') ))})
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s修改了角色%s' % (admin.name, data.get('name')))
+            db.session.commit()
+            return redirect(url_for('admin.rolelist'))
+        return render_template('admin/addrole.html', form=form)
+    role=db.session.query(models.Role).filter_by(id=id).first()
+
+    if '-' in role.auths:
+        auths=list(map(lambda x:int(x),role.auths.split('-')))
+    else:
+        auths=role.auths
+    form=RoleForm(data={'name':role.name,'auths':auths})
+    return render_template('admin/addrole.html', form=form)
+
+@admin.route('/delrole/<int:id>')
+def delrole(id):
+    pass
 
 @admin.route('/rolelist')
 def rolelist():
