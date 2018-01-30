@@ -403,22 +403,23 @@ def delmoviecol(id):
     :param id:
     :return:
     '''
-    try:
-        moviecol=db.session.query(models.MovieCol).filter_by(id=id).first()
-        movie=db.session.query(models.Movie).filter_by(id=moviecol.movie_id).first()
-        db.session.query(models.MovieCol).filter_by(id=id).delete()
-        admin = getAdmin()
-        getOplog(ip=request.remote_addr, admin_id=admin.id,
-                 reason='%s删除了电影收藏%s' % (admin.name, movie.title))
-        db.session.commit()
-        return redirect(url_for('admin.moviecol_list'))
+
+    moviecol=db.session.query(models.MovieCol).filter_by(id=id).first()
+    movie=db.session.query(models.Movie).filter_by(id=moviecol.movie_id).first()
+    db.session.query(models.MovieCol).filter_by(id=id).delete()
+    admin = getAdmin()
+    getOplog(ip=request.remote_addr, admin_id=admin.id,
+             reason='%s删除了电影%s' % (admin.name, movie.title))
+    db.session.commit()
+    return redirect(url_for('admin.moviecol_list'))
 
 
 
 
 @admin.route('/oplog_list')
 def oplog_list():
-    return render_template('admin/oplog_list.html')
+    oplogs=db.session.query(models.Oplog).all()
+    return render_template('admin/oplog_list.html',oplogs=oplogs)
 
 
 @admin.route('/adminloginlog_list')
