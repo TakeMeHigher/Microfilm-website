@@ -21,8 +21,8 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="143" column="9" lean-forward="false" selection-start-line="143" selection-start-column="4" selection-end-line="143" selection-end-column="9" />
+            <state relative-caret-position="399">
+              <caret line="144" column="11" lean-forward="false" selection-start-line="144" selection-start-column="4" selection-end-line="144" selection-end-column="11" />
               <folding>
                 <element signature="e#16#31#0" expanded="true" />
                 <element signature="e#81#810#0" expanded="false" />
@@ -51,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/admin/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="540" column="32" lean-forward="false" selection-start-line="540" selection-start-column="32" selection-end-line="540" selection-end-column="32" />
+            <state relative-caret-position="278">
+              <caret line="558" column="61" lean-forward="false" selection-start-line="558" selection-start-column="56" selection-end-line="558" selection-end-column="61" />
               <folding>
                 <element signature="e#14#23#0" expanded="true" />
                 <element signature="e#513#685#0" expanded="false" />
@@ -92,14 +92,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rolelist.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rolelist.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/templates/admin/rolelist.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="64" column="10" lean-forward="false" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
+            <state relative-caret-position="168">
+              <caret line="41" column="37" lean-forward="true" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="37" />
               <folding>
                 <element signature="n#section#0;n#!!top" expanded="false" />
-                <element signature="n#section#1;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -235,10 +234,10 @@
         <option value="$PROJECT_DIR$/app/templates/admin/addAuth.html" />
         <option value="$PROJECT_DIR$/app/templates/admin/authlist.html" />
         <option value="$PROJECT_DIR$/app/templates/admin/grid.html" />
-        <option value="$PROJECT_DIR$/app/templates/admin/rolelist.html" />
         <option value="$PROJECT_DIR$/app/admin/forms.py" />
         <option value="$PROJECT_DIR$/app/templates/admin/addrole.html" />
         <option value="$PROJECT_DIR$/app/admin/views.py" />
+        <option value="$PROJECT_DIR$/app/templates/admin/rolelist.html" />
       </list>
     </option>
   </component>
@@ -449,7 +448,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.58147514" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.097770154" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -863,17 +862,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/admin/rolelist.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="64" column="10" lean-forward="false" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
-          <folding>
-            <element signature="n#section#0;n#!!top" expanded="false" />
-            <element signature="n#section#1;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/admin/addrole.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -881,22 +869,6 @@
           <folding>
             <element signature="n#section#0;n#!!top" expanded="false" />
             <element signature="n#div#0;n#section#1;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="143" column="9" lean-forward="false" selection-start-line="143" selection-start-column="4" selection-end-line="143" selection-end-column="9" />
-          <folding>
-            <element signature="e#16#31#0" expanded="true" />
-            <element signature="e#81#810#0" expanded="false" />
-            <element signature="e#81#100#1" expanded="false" />
-            <element signature="e#846#1191#0" expanded="false" />
-            <element signature="e#1221#1564#0" expanded="false" />
-            <element signature="e#1596#2439#0" expanded="false" />
-            <element signature="e#4346#5087#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -914,10 +886,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="144" column="11" lean-forward="false" selection-start-line="144" selection-start-column="4" selection-end-line="144" selection-end-column="11" />
+          <folding>
+            <element signature="e#16#31#0" expanded="true" />
+            <element signature="e#81#810#0" expanded="false" />
+            <element signature="e#81#100#1" expanded="false" />
+            <element signature="e#846#1191#0" expanded="false" />
+            <element signature="e#1221#1564#0" expanded="false" />
+            <element signature="e#1596#2439#0" expanded="false" />
+            <element signature="e#4346#5087#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/admin/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="540" column="32" lean-forward="false" selection-start-line="540" selection-start-column="32" selection-end-line="540" selection-end-column="32" />
+        <state relative-caret-position="278">
+          <caret line="558" column="61" lean-forward="false" selection-start-line="558" selection-start-column="56" selection-end-line="558" selection-end-column="61" />
           <folding>
             <element signature="e#14#23#0" expanded="true" />
             <element signature="e#513#685#0" expanded="false" />
@@ -949,6 +937,16 @@
             <element signature="e#12870#12966#0" expanded="false" />
             <element signature="e#13037#13696#0" expanded="false" />
             <element signature="e#13744#13885#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/admin/rolelist.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="41" column="37" lean-forward="true" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="37" />
+          <folding>
+            <element signature="n#section#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>

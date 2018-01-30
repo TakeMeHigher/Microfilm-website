@@ -543,6 +543,8 @@ def addrole():
             getOplog(ip=request.remote_addr, admin_id=admin.id,
                      reason='%s添加了角色%s' % (admin.name, data.get('name')))
             db.session.commit()
+            return redirect(url_for('admin.rolelist'))
+        return render_template('admin/addrole.html', form=form)
     form=RoleForm()
     return render_template('admin/addrole.html',form=form)
 
@@ -553,7 +555,8 @@ def rolelist():
     角色列表
     :return:
     '''
-    return  render_template('admin/rolelist.html')
+    roles=db.session.query(models.Role).all()
+    return  render_template('admin/rolelist.html',roles=roles)
 
 
 @admin.route('/admin_add')
