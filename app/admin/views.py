@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm,MovieForm,TagForm
+from  app.admin.forms import LoginForm,MovieForm,TagForm,PwdForm
 from  app.models import Admin
 from app import models
 from  app import db
@@ -85,7 +85,8 @@ def changepwd():
     修改密码
     :return:
     '''
-    return render_template('admin/changepwd.html')
+    form=PwdForm()
+    return render_template('admin/changepwd.html',form=form)
 
 
 @admin.route("/addtag",methods=['GET','POST'])
@@ -339,15 +340,6 @@ def delmoviecol(id):
     return redirect(url_for('admin.moviecol_list'))
 
 
-
-@admin.route('/editmoviecol/<int:id>')
-def editmoviecol(id):
-    '''
-    编辑电影收藏
-    :param id:
-    :return:
-    '''
-    pass
 
 @admin.route('/oplog_list')
 def oplog_list():

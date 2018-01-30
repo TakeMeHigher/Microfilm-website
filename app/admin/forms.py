@@ -156,6 +156,27 @@ class TagForm(Form):
 
 
 
+class PwdForm(Form):
+    oldpwd=simple.StringField(
+        label='旧密码',
+        validators=[
+            validators.DataRequired(message='旧密码不能为空')
+        ],
+        widget=widgets.PasswordInput(),
+        render_kw={'class':"form-control", 'id':"input_pwd", 'placeholder':"请输入旧密码！"}
+    )
+
+    newpwd = simple.StringField(
+        label='新密码',
+        validators=[
+            validators.DataRequired(message='新密码不能为空')
+        ],
+        widget=widgets.PasswordInput(),
+        render_kw={'class': "form-control", 'id': "input_pwd", 'placeholder': "请输入新密码！"}
+    )
+
+
+
 
 
 

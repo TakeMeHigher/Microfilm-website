@@ -18,12 +18,14 @@
                         <form role="form">
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label for="input_pwd">旧密码</label>
-                                    <input type="password" class="form-control" id="input_pwd" placeholder="请输入旧密码！">
+                                    {{form.oldpwd.label}}{{form.oldpwd}}{{form.oldpwd.errors[0]}}
+                                    <!--<label for="input_pwd">旧密码</label>-->
+                                    <!--<input type="password" class="form-control" id="input_pwd" placeholder="请输入旧密码！">-->
                                 </div>
                                 <div class="form-group">
-                                    <label for="input_newpwd">新密码</label>
-                                    <input type="password" class="form-control" id="input_newpwd" placeholder="请输入新密码！">
+                                     {{form.newpwd.label}}{{form.newpwd}}{{form.newpwd.errors[0]}}
+                                    <!--<label for="input_newpwd">新密码</label>-->
+                                    <!--<input type="password" class="form-control" id="input_newpwd" placeholder="请输入新密码！">-->
                                 </div>
                             </div>
                             <div class="box-footer">
