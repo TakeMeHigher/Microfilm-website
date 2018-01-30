@@ -1,22 +1,53 @@
 #coding:utf8
 from . import home
-from flask import render_template,redirect,url_for,request
+from flask import render_template,redirect,url_for,request,session
 
 
-from .forms import RegForm
+from .forms import RegForm,LoginForm
 from app import models
 from  app import db
 
 def getUser():
-    pass
+    '''
+    获取当前登录的会员
+    :return:
+    '''
+    username = session.get('name')
+    user = db.session.query(models.User).filter_by(name=username).first()
+    return user
 
 @home.route("/")
 def index():
+    '''
+    首页
+    :return:
+    '''
     return render_template('/home/index.html')
 
 @home.route('/login/')
 def login():
-    return  render_template('home/login.html')
+    '''
+    会员登录
+    :return:
+    '''
+    if request.method=='POST':
+        form =LoginForm(request.form)
+        if form.validate():
+            data=form.data
+            user=db.session.query(models.User).filter_by(name=data.get('name',pwd=data.get('pwd'))).first()
+            if user:
+                session['user']=data.get('name')
+                user=getUser()
+                userlog=models.Userlog(ip=request.remote_addr,user_id=usr.id)
+                db.session.add(userlog)
+                db.session.commit()
+                return redirect(url_for('admin.index'))
+            else:
+                msg='密码错误'
+                return render_template('home/login.html', form=form,msg=msg)
+        return render_template('home/login.html', form=form)
+    form=LoginForm()
+    return  render_template('home/login.html',form=form)
 
 @home.route('/logout/')
 def logout():

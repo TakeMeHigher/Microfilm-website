@@ -513,8 +513,8 @@ def userloginlog_list():
     会员登录日志列表
     :return:
     '''
-
-    return render_template('admin/userloginlog_list.html')
+    userlogs=db.session.query(models.Userlog).all()
+    return render_template('admin/userloginlog_list.html',userlogs=userlogs)
 
 
 @admin.route('/addAuth',methods=['GET', 'POST'])

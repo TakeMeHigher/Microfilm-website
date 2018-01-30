@@ -57,3 +57,33 @@ class RegForm(Form):
         count = db.session.query(models.User).filter_by(name=field.data).count()
         if count:
             raise validators.StopValidation('该名称已经被占用')
+
+
+
+
+
+class LoginForm(Form):
+    name = simple.StringField(
+        label='用户名',
+        validators=[
+            validators.DataRequired(message='用户名不能为空')
+        ],
+        render_kw={'class': "form-control", 'placeholder': "请输入用户名!",'id':'input_contact'},
+        widget=widgets.TextInput()
+    )
+
+    pwd = simple.PasswordField(
+        label='密码',
+        validators=[
+            validators.DataRequired(message='密码不能为空')
+        ],
+        render_kw={'class': "form-control", 'placeholder': "请输入密码!",'id':'input_password'},
+        widget=widgets.TextInput()
+    )
+
+    def validate_name(self, field):
+        name = field.data
+        print(name, '-----')
+        count =models.User.query.filter_by(name=name).count()
+        if count == 0:
+            raise validators.StopValidation('用户名不存在')
