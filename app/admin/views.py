@@ -79,12 +79,27 @@ def logout():
     return redirect(url_for('admin.login'))
 
 
-@admin.route("/changepwd")
+@admin.route("/changepwd",methods=['GET','POST'])
 def changepwd():
     '''
     修改密码
     :return:
     '''
+    if request.method=='POST':
+        form =PwdForm(request.form)
+        if form.validate():
+            oldpwd=form.data.get('oldpwd')
+            admin=db.session.query(models.Admin).filter_by(pwd=oldpwd).first()
+            if admin:
+                username=session.get('admin')
+                db.session.query(models.Admin).filter_by(name=username).update({'pwd':form.data.get('newpwd')})
+                db.session.commit()
+                session['admin']=''
+                return redirect(url_for('admin.login'))
+            else:
+                msg='旧密码输入错误'
+                return  render_template('admin/changepwd.html',form=form,msg=msg)
+        return render_template('admin/changepwd.html', form=form)
     form=PwdForm()
     return render_template('admin/changepwd.html',form=form)
 

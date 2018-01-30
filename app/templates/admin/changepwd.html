@@ -15,7 +15,8 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">修改密码</h3>
                         </div>
-                        <form role="form">
+                        <p style="color: red">{{msg}}</p>
+                        <form role="form" method="post">
                             <div class="box-body">
                                 <div class="form-group">
                                     {{form.oldpwd.label}}{{form.oldpwd}}{{form.oldpwd.errors[0]}}
