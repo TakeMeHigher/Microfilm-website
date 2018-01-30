@@ -14,7 +14,25 @@ from app import models
 from  app import db
 from  app.utils.pager import Pagination
 
+
+#获取访问者的Ip
+IP=request.remote_addr
+
 up_url=os.path.join(os.path.abspath(os.path.dirname(__file__)),'static/uploads/')
+
+
+
+def getAdmin():
+    '''
+    获取当前登录的Admin对象
+    :return:
+    '''
+    username = session.get('admin')
+    admin = db.session.query(models.Admin).filter_by(name=username).first()
+    return admin
+
+
+
 @admin.before_request
 def check_is_login():
     '''
@@ -28,7 +46,7 @@ def check_is_login():
 
 def changeFilename(filename):
     '''
-    获取上传文件的名称
+    修改上传文件的名称
     :param filename:
     :return:
     '''
@@ -93,7 +111,10 @@ def changepwd():
             if admin:
                 username=session.get('admin')
                 db.session.query(models.Admin).filter_by(name=username).update({'pwd':form.data.get('newpwd')})
+                oplog=models.Oplog(ip=IP,admin_id=admin.id,reason='%s修改了密码'%admin.name)
+                db.session.add(oplog)
                 db.session.commit()
+
                 session['admin']=''
                 return redirect(url_for('admin.login'))
             else:
@@ -116,6 +137,9 @@ def addtag():
             name=form.data.get('name')
         )
         db.session.add(tag)
+        oplog = models.Oplog(ip=IP, admin_id=admin.id, reason='%s修改了密码' % admin.name)
+        db.session.add(oplog)
+        db.session.commit()
         db.session.commit()
         return redirect(url_for('admin.taglist'))
     form=TagForm()

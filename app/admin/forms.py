@@ -10,6 +10,8 @@ from app.models import Admin
 from app import models
 from app import db
 
+
+
 class LoginForm(Form):
     account=simple.StringField(
         label='账号',
