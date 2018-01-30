@@ -48,6 +48,11 @@ def check_is_login():
     '''
     if request.path == '/admin/login':
         return None
+    if request.path=='/login':
+        return None
+    if  session.get('user'):
+        return  None
+
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
 

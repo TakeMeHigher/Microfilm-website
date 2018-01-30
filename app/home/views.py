@@ -12,7 +12,7 @@ def getUser():
     获取当前登录的会员
     :return:
     '''
-    username = session.get('name')
+    username = session.get('user')
     user = db.session.query(models.User).filter_by(name=username).first()
     return user
 
@@ -24,7 +24,7 @@ def index():
     '''
     return render_template('/home/index.html')
 
-@home.route('/login/')
+@home.route('/login/',methods=['GET','POST'])
 def login():
     '''
     会员登录
@@ -34,14 +34,14 @@ def login():
         form =LoginForm(request.form)
         if form.validate():
             data=form.data
-            user=db.session.query(models.User).filter_by(name=data.get('name',pwd=data.get('pwd'))).first()
+            user=db.session.query(models.User).filter_by(name=data.get('name'),pwd=data.get('pwd')).first()
             if user:
                 session['user']=data.get('name')
                 user=getUser()
-                userlog=models.Userlog(ip=request.remote_addr,user_id=usr.id)
+                userlog=models.Userlog(ip=request.remote_addr,user_id=user.id)
                 db.session.add(userlog)
                 db.session.commit()
-                return redirect(url_for('admin.index'))
+                return redirect(url_for('home.index'))
             else:
                 msg='密码错误'
                 return render_template('home/login.html', form=form,msg=msg)
@@ -51,6 +51,11 @@ def login():
 
 @home.route('/logout/')
 def logout():
+    '''
+    会员注销
+    :return:
+    '''
+    session['user']=''
     return  redirect(url_for('home.login'))
 
 

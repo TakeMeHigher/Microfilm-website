@@ -47,7 +47,9 @@
                     </table>
                 </div>
                 <div class="box-footer clearfix">
-                   {{ pageObj.page_html()|safe }}
+                  <ul class="pagination pagination-sm no-margin pull-right">
+                         {{ pageObj.page_html()|safe }}
+                    </ul>
                 </div>
             </div>
         </div>

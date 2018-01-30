@@ -63,6 +63,9 @@ class RegForm(Form):
 
 
 class LoginForm(Form):
+    '''
+    会员登录
+    '''
     name = simple.StringField(
         label='用户名',
         validators=[
