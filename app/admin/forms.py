@@ -46,7 +46,6 @@ class LoginForm(Form):
         if count==0:
             raise validators.StopValidation('用户名不存在')
 
-
 class MovieForm(Form):
     title = simple.StringField(
         label='片名',
@@ -145,7 +144,6 @@ class MovieForm(Form):
         super(MovieForm,self).__init__(*args,**kwargs)
         self.tag.choices=db.session.query(models.Tag.id,models.Tag.name).all()
 
-
 class TagForm(Form):
     name = simple.StringField(
         label='标签名',
@@ -155,8 +153,6 @@ class TagForm(Form):
         render_kw={'class': "form-control", 'placeholder': "请输入标签名!", 'id': "input_name"},
         widget=widgets.TextInput()
     )
-
-
 
 class PwdForm(Form):
     oldpwd=simple.StringField(
@@ -177,7 +173,6 @@ class PwdForm(Form):
         render_kw={'class': "form-control", 'id': "input_pwd", 'placeholder': "请输入新密码！"}
     )
 
-
 class  AuthForm(Form):
     name=simple.StringField(
         label='权限名称',
@@ -196,6 +191,27 @@ class  AuthForm(Form):
         render_kw={'class': "form-control", 'id': "input_url", 'placeholder': "请输入权限地址！"}
     )
 
+class RoleForm(Form):
+    name = simple.StringField(
+        label='角色名称',
+        validators=[
+            validators.DataRequired(message='角色名称不能为空')
+        ],
+        widget=widgets.TextInput(),
+        render_kw={'class': "form-control", 'id': "input_name", 'placeholder': "请输入权限名称！"}
+    )
+    auths = core.SelectMultipleField(
+      label='操作权限',
+        choices='',
+        widget=widgets.ListWidget(prefix_label=False),
+        option_widget=widgets.CheckboxInput(),
+        coerce=int,
+    )
+
+
+    def __init__(self,*args,**kwargs):
+        super(RoleForm,self).__init__(*args,**kwargs)
+        self.auths.choices=db.session.query(models.Auth.id,models.Auth.name).all()
 
 
 

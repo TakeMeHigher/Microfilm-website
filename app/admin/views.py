@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm
+from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm,RoleForm
 from  app.models import Admin
 from app import models
 from  app import db
@@ -515,7 +515,11 @@ def delauth(id):
     :param id:
     :return:
     '''
+    auth=db.session.query(models.Auth).filter_by(id=id)
     db.session.query(models.Auth).filter_by(id=id).delete()
+    admin = getAdmin()
+    getOplog(ip=request.remote_addr, admin_id=admin.id,
+             reason='%s删除了权限%s' % (admin.name, auth.name))
     db.session.commit()
     return redirect(url_for('admin.authlist'))
 
@@ -526,7 +530,21 @@ def addrole():
     添加角色
     :return:
     '''
-    return render_template('admin/addrole.html')
+    if request.method=='POST':
+        form=RoleForm(request.form)
+        if form.validate():
+            data=form.data
+            role=models.Role(
+                name=data.get('name'),
+                auths=''.join(map(lambda x:str(x),data.get('auths')))
+            )
+            db.session.add(role)
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s添加了角色%s' % (admin.name, data.get('name')))
+            db.session.commit()
+    form=RoleForm()
+    return render_template('admin/addrole.html',form=form)
 
 
 @admin.route('/rolelist')
