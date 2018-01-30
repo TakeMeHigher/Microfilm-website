@@ -520,6 +520,23 @@ def delauth(id):
     return redirect(url_for('admin.authlist'))
 
 
+@admin.route('/addrole',methods=['GET','POST'])
+def addrole():
+    '''
+    添加角色
+    :return:
+    '''
+    return render_template('admin/addrole.html')
+
+
+@admin.route('/rolelist')
+def rolelist():
+    '''
+    角色列表
+    :return:
+    '''
+    return  render_template('admin/rolelist.html')
+
 
 @admin.route('/admin_add')
 def admin_add():
