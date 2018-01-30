@@ -1,6 +1,14 @@
 #coding:utf8
 from . import home
-from flask import render_template,redirect,url_for
+from flask import render_template,redirect,url_for,request
+
+
+from .forms import RegForm
+from app import models
+from  app import db
+
+def getUser():
+    pass
 
 @home.route("/")
 def index():
@@ -15,9 +23,24 @@ def logout():
     return  redirect(url_for('home.login'))
 
 
-@home.route('/regist/')
+@home.route('/regist/',methods=['GET','POST'])
 def regist():
-    return  render_template('/home/register.html')
+    if request.method=='POST':
+        form =RegForm(request.form)
+        if form.validate():
+            data=form.data
+            user=models.User(
+                name=data.get('name'),
+                pwd=data.get('pwd'),
+                email=data.get('email'),
+                phone=data.get('phone')
+            )
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('home.login'))
+        return render_template('/home/register.html', form=form)
+    form=RegForm()
+    return  render_template('/home/register.html',form=form)
 
 
 @home.route('/user/')
