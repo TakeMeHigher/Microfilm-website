@@ -187,7 +187,13 @@ def taglist():
     :return:
     '''
     tags = db.session.query(models.Tag).all()
-    return render_template('admin/tag_list.html', tags=tags)
+    current_page = request.args.get('page', 1)
+    total_count = len(tags)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    tags = tags[pageObj.start:pageObj.end]
+    return render_template('admin/tag_list.html', tags=tags,pageObj=pageObj)
 
 
 @admin.route('/edittag/<int:id>', methods=['GET', 'POST'])
@@ -285,7 +291,13 @@ def movielist():
     for movie in movielist:
         tag_name = db.session.query(models.Tag.name).filter_by(id=movie.tag_id).first()
         tag_names[movie.id] = tag_name[0]
-    return render_template('admin/movie_list.html', movielist=movielist, tag_names=tag_names)
+    current_page = request.args.get('page', 1)
+    total_count = len(movielist)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    movielist = movielist[pageObj.start:pageObj.end]
+    return render_template('admin/movie_list.html', movielist=movielist, tag_names=tag_names,pageObj=pageObj)
 
 
 @admin.route('/editmovie/<int:id>', methods=['GET', 'POST'])
@@ -399,8 +411,13 @@ def commentlist():
         models.Movie).filter(models.Comment.user_id == models.User.id).filter(
         models.Comment.movie_id == models.Movie.id
     ).all()
-    print(len(comments))
-    return render_template('admin/comment_list.html', comments=comments)
+    current_page = request.args.get('page', 1)
+    total_count = len(comments)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    comments = comments[pageObj.start:pageObj.end]
+    return render_template('admin/comment_list.html', comments=comments,pageObj=pageObj)
 
 
 @admin.route('/delcomment/<int:id>')
@@ -428,8 +445,14 @@ def moviecol_list():
 
     moviecols = db.session.query(models.MovieCol).join(models.User).join(models.Movie).filter(
         models.MovieCol.movie_id == models.Movie.id
-    ).filter(models.MovieCol.user_id == models.User.id).order_by(models.MovieCol.addtime.desc())
-    return render_template('admin/moviecol_list.html', moviecols=moviecols)
+    ).filter(models.MovieCol.user_id == models.User.id).order_by(models.MovieCol.addtime.desc()).all()
+    current_page = request.args.get('page', 1)
+    total_count = len(moviecols)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    moviecols = moviecols[pageObj.start:pageObj.end]
+    return render_template('admin/moviecol_list.html', moviecols=moviecols,pageObj=pageObj)
 
 
 @admin.route('/delmoviecol/<int:id>')
@@ -457,7 +480,14 @@ def oplog_list():
     :return:
     '''
     oplogs = db.session.query(models.Oplog).all()
-    return render_template('admin/oplog_list.html', oplogs=oplogs)
+
+    current_page = request.args.get('page', 1)
+    total_count = len(oplogs)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    oplogs = oplogs[pageObj.start:pageObj.end]
+    return render_template('admin/oplog_list.html', oplogs=oplogs,pageObj=pageObj)
 
 
 @admin.route('/adminloginlog_list')
@@ -467,7 +497,14 @@ def adminloginlog_list():
     :return:
     '''
     adminlogs=db.session.query(models.Adminlog).all()
-    return render_template('admin/adminloginlog_list.html',adminlogs=adminlogs)
+
+    current_page = request.args.get('page', 1)
+    total_count = len(adminlogs)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    adminlogs = adminlogs[pageObj.start:pageObj.end]
+    return render_template('admin/adminloginlog_list.html',adminlogs=adminlogs,pageObj=pageObj)
 
 
 @admin.route('/userloginlog_list')
@@ -476,6 +513,7 @@ def userloginlog_list():
     会员登录日志列表
     :return:
     '''
+
     return render_template('admin/userloginlog_list.html')
 
 
@@ -508,7 +546,13 @@ def authlist():
     :return:
     '''
     auths=db.session.query(models.Auth).all()
-    return render_template('admin/authlist.html',auths=auths)
+    current_page = request.args.get('page', 1)
+    total_count = len(auths)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    auths = auths[pageObj.start:pageObj.end]
+    return render_template('admin/authlist.html',auths=auths,pageObj=pageObj)
 
 @admin.route('/editauth/<int:id>',methods=['GET', 'POST'])
 def editauth(id):
@@ -606,7 +650,13 @@ def rolelist():
     :return:
     '''
     roles=db.session.query(models.Role).all()
-    return  render_template('admin/rolelist.html',roles=roles)
+    current_page = request.args.get('page', 1)
+    total_count = len(roles)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    roles = roles[pageObj.start:pageObj.end]
+    return  render_template('admin/rolelist.html',roles=roles,pageObj=pageObj)
 
 
 @admin.route('/admin_add',methods=['GET','POST'])
@@ -632,4 +682,10 @@ def admin_add():
 @admin.route('/admin_list')
 def admin_list():
     admins=db.session.query(models.Admin).all()
-    return render_template('admin/admin_list.html',admins=admins)
+    current_page = request.args.get('page', 1)
+    total_count = len(admins)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    admins = admins[pageObj.start:pageObj.end]
+    return render_template('admin/admin_list.html',admins=admins,pageObj=pageObj)
