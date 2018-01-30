@@ -32,24 +32,17 @@
                                 <tr>
                                     <th>编号</th>
                                     <th>管理员名称</th>
-                                    <th>管理员类型</th>
                                     <th>管理员角色</th>
                                     <th>添加时间</th>
                                 </tr>
+                                {% for admin in admins %}
                                 <tr>
-                                    <td>1</td>
-                                    <td>jinlong</td>
-                                    <td>普通管理员</td>
-                                    <td>系统管理员</td>
-                                    <td>2017-06-01</td>
+                                    <td>{{loop.index}}</td>
+                                    <td>{{admin.name}}</td>
+                                    <td>{{admin.role.name}}</td>
+                                    <td>{{admin.addtime}}</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>jianbo</td>
-                                    <td>超级管理员</td>
-                                    <td>系统管理员</td>
-                                    <td>2017-06-01</td>
-                                </tr>
+                              {% endfor %}
                                 </tbody>
                             </table>
                         </div>

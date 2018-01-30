@@ -214,7 +214,58 @@ class RoleForm(Form):
         self.auths.choices=db.session.query(models.Auth.id,models.Auth.name).all()
 
 
+class AdminForm(Form):
+    name = simple.StringField(
+        label='管理员名称',
+        validators=[
+            validators.DataRequired(message='管理员名称不能为空')
+        ],
+        widget=widgets.TextInput(),
+        render_kw={'class': "form-control", 'id': "input_name", 'placeholder': "请输入管理员名称！"}
+    )
 
+    pwd = simple.StringField(
+        label='管理员密码',
+        validators=[
+            validators.DataRequired(message='密码不能为空')
+        ],
+        render_kw={'class': "form-control", 'placeholder': "请输入密码!",'id':"input_pwd"},
+        widget=widgets.PasswordInput()
+    )
+
+    confirmpwd = simple.StringField(
+        label='管理员重复密码',
+        validators=[
+            validators.DataRequired(message='重复密码不能为空')
+        ],
+        render_kw={'class': "form-control", 'placeholder': "请输入密码!"},
+        widget=widgets.PasswordInput()
+    )
+
+    role=core.SelectField(
+        label='所拥有的角色',
+        validators=[
+            validators.DataRequired(message='角色不能为空')
+        ],
+        choices='',
+        render_kw={'id':"input_role_id"},
+        widget=widgets.Select(),
+        coerce=int
+    )
+
+
+    def __init__(self,*args,**kwargs):
+        super(AdminForm, self).__init__(*args,**kwargs)
+        self.role.choices=db.session.query(models.Role.id,models.Role.name).all()
+
+    def validate_confirmpwd(self,field):
+        if field.data != self.data.get('pwd'):
+            raise validators.StopValidation('重复密码输入错误')
+
+    def validate_name(self, field):
+        count=db.session.query(models.Admin).filter_by(name=field.data).count()
+        if count:
+            raise validators.StopValidation('该名称已经被占用')
 
 
 

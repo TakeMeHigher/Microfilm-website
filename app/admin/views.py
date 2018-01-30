@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm,RoleForm
+from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm,RoleForm,AdminForm
 from  app.models import Admin
 from app import models
 from  app import db
@@ -559,11 +559,27 @@ def rolelist():
     return  render_template('admin/rolelist.html',roles=roles)
 
 
-@admin.route('/admin_add')
+@admin.route('/admin_add',methods=['GET','POST'])
 def admin_add():
-    return render_template('admin/admin_add.html')
+    if request.method=='POST':
+        form=AdminForm(request.form)
+        print(form.data)
+        if form.validate():
+            data=form.data
+            print(data)
+            admin=models.Admin(name=data.get('name'),pwd=data.get('pwd'),role_id=int(data.get('role')))
+            db.session.add(admin)
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s添加了管理员%s' % (admin.name, data.get('name')))
+            db.session.commit()
+            return redirect(url_for('admin.admin_list'))
+        return render_template('admin/admin_add.html', form=form)
+    form=AdminForm()
+    return render_template('admin/admin_add.html',form=form)
 
 
 @admin.route('/admin_list')
 def admin_list():
-    return render_template('admin/admin_list.html')
+    admins=db.session.query(models.Admin).all()
+    return render_template('admin/admin_list.html',admins=admins)
