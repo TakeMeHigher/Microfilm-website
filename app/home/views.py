@@ -5,7 +5,7 @@ from . import home
 from flask import render_template,redirect,url_for,request,session
 from werkzeug.utils import secure_filename
 
-from .forms import RegForm,LoginForm,UserForm
+from .forms import RegForm,LoginForm,UserForm,PwdForm
 from app import models
 from  app import db
 
@@ -112,9 +112,29 @@ def user():
     form=UserForm(data={'name':user.name,'email':user.email,'phone':user.phone,'avatar':user.avatar,'info':user.info})
     return  render_template('/home/user.html',form=form)
 
-@home.route('/changpwd/')
+@home.route('/changpwd/',methods=['GET','POST'])
 def changpwd():
-    return  render_template('/home/changpwd.html')
+    '''
+       修改密码
+       :return:
+       '''
+    if request.method == 'POST':
+        form = PwdForm(request.form)
+        if form.validate():
+            oldpwd = form.data.get('oldpwd')
+            user = db.session.query(models.User).filter_by(pwd=oldpwd).first()
+            if user:
+                username = session.get('user')
+                db.session.query(models.User).filter_by(name=username).update({'pwd': form.data.get('newpwd')})
+                db.session.commit()
+                session['user'] = ''
+                return redirect(url_for('home.login'))
+            else:
+                msg = '旧密码输入错误'
+                return render_template('/home/changpwd.html', form=form, msg=msg)
+        return render_template('/home/changpwd.html', form=form)
+    form = PwdForm()
+    return  render_template('/home/changpwd.html',form=form)
 
 @home.route('/comments/')
 def comments():

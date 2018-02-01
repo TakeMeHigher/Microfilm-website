@@ -137,3 +137,22 @@ class UserForm(Form):
         widget=widgets.TextArea(),
         render_kw={'class': "form-control", 'rows': "10", 'id': "input_info"}
     )
+
+class PwdForm(Form):
+    oldpwd = simple.StringField(
+        label='旧密码',
+        validators=[
+            validators.DataRequired(message='旧密码不能为空')
+        ],
+        widget=widgets.PasswordInput(),
+        render_kw={'class': "form-control", 'id': "input_oldpwd", 'placeholder': "请输入旧密码！"}
+    )
+
+    newpwd = simple.StringField(
+        label='新密码',
+        validators=[
+            validators.DataRequired(message='新密码不能为空')
+        ],
+        widget=widgets.PasswordInput(),
+        render_kw={'class': "form-control", 'id': "input_newpwd", 'placeholder': "请输入新密码！"}
+    )
