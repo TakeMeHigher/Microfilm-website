@@ -267,6 +267,22 @@ class AdminForm(Form):
         if count:
             raise validators.StopValidation('该名称已经被占用')
 
+class PreviewForm(Form):
+    title = simple.StringField(
+        label='片名',
+        validators=[
+            validators.DataRequired(message='片名不能为空')
+        ],
+        render_kw={'class': "form-control", 'placeholder': "请输入预告标题！", 'id': "input_title"},
+        widget=widgets.TextInput()
+    )
 
-
+    logo = simple.FileField(
+        label='封面',
+        validators={
+            validators.DataRequired(message='预告封面不能为空')
+        },
+        widget=widgets.FileInput(),
+        render_kw={'id': "input_logo"}
+    )
 

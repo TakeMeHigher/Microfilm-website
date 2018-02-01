@@ -8,13 +8,23 @@ from werkzeug.utils import secure_filename
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm,RoleForm,AdminForm
+from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm,RoleForm,AdminForm,PreviewForm
 from  app.models import Admin
 from app import models
 from  app import db
 from  app.utils.pager import Pagination
 
-up_url = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/uploads/')
+BASEDIR = os.path.abspath(os.path.dirname(__file__)).strip('\hadmin')
+print(BASEDIR)
+
+logo_dir = os.path.join(BASEDIR, 'static', 'logo')
+movie_dir = os.path.join(BASEDIR, 'static', 'video')
+
+if not os.path.exists(logo_dir):
+    os.makedirs(logo_dir)
+
+if not os.path.exists(movie_dir):
+    os.makedirs(movie_dir)
 
 
 def getAdmin():
@@ -69,17 +79,12 @@ def check_is_login():
         url=db.session.query(models.Auth.url).filter_by(id=id).first()
         urls.append(url[0])
 
-    print(request.url_rule,type(request.url_rule))
-    print(request.path)
-    print(urls)
-    print(str(request.url_rule) in urls)
+    # print(request.url_rule,type(request.url_rule))
+    # print(request.path)
+    # print(urls)
+    # print(str(request.url_rule) in urls)
     if str(request.url_rule) not in urls:
         return '无权访问'
-
-
-
-
-
 
 def changeFilename(filename):
     '''
@@ -116,7 +121,7 @@ def login():
             data = form.data
             # pwd=Admin.query(Admin.pwd).filter_by(name=data.get('account'))
             pwd = db.session.query(Admin.pwd).filter_by(name=data.get('account')).first()
-            print(pwd[0], '-----')
+
             if pwd[0] != data.get('pwd'):
                 flash('密码错误')
                 return redirect(url_for('admin.login'))
@@ -369,14 +374,35 @@ def delmovie(id):
     return redirect(url_for('admin.movielist'))
 
 
-@admin.route("/previewadd")
+@admin.route("/previewadd",methods=['GET', 'POST'])
 def previewadd():
-    return render_template('admin/preview_add.html')
+    if request.method=='POST':
+        form=PreviewForm(data=request.form,logo=request.files)
+        print(request.form)
+        if form.validate():
+            data=request.form
+            print(data)
+            f=request.files['logo']
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(logo_dir, filename))
+            preview=models.Preview(title=data.get('title'),logo=filename)
+            db.session.add(preview)
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s添加了电影预告封面%s' % (admin.name, data.get('title')))
+            db.session.commit()
+            return redirect(url_for('admin.previewlist'))
+        return render_template('admin/preview_add.html', form=form)
+
+    form=PreviewForm()
+    return render_template('admin/preview_add.html',form=form)
 
 
 @admin.route("/previewlist")
 def previewlist():
-    return render_template('admin/preview_list.html')
+    previews=db.session.query(models.Preview).all()
+
+    return render_template('admin/preview_list.html',previews=previews)
 
 
 @admin.route("/userlist")
@@ -674,10 +700,10 @@ def rolelist():
 def admin_add():
     if request.method=='POST':
         form=AdminForm(request.form)
-        print(form.data)
+
         if form.validate():
             data=form.data
-            print(data)
+
             admin=models.Admin(name=data.get('name'),pwd=data.get('pwd'),role_id=int(data.get('role')))
             db.session.add(admin)
             admin = getAdmin()
