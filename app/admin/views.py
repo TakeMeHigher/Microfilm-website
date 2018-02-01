@@ -83,8 +83,8 @@ def check_is_login():
     # print(request.path)
     # print(urls)
     # print(str(request.url_rule) in urls)
-    if str(request.url_rule) not in urls:
-        return '无权访问'
+    # if str(request.url_rule) not in urls:
+    #     return '无权访问'
 
 def changeFilename(filename):
     '''
@@ -396,6 +396,42 @@ def previewadd():
 
     form=PreviewForm()
     return render_template('admin/preview_add.html',form=form)
+
+
+@admin.route('/previewedit/<int:id>',methods=['GET', 'POST'])
+def previewedit(id):
+    if request.method=='POST':
+        form=PreviewForm(data=request.form,logo=request.files)
+        if form.validate():
+            data = request.form
+            print(data)
+            f = request.files['logo']
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(logo_dir, filename))
+            db.session.query(models.Preview).filter_by(id=id).update({
+                'title':data.get('title'),
+                'logo':filename
+            })
+            admin = getAdmin()
+            getOplog(ip=request.remote_addr, admin_id=admin.id,
+                     reason='%s修改了电影预告封面%s' % (admin.name, data.get('title')))
+            db.session.commit()
+            return redirect(url_for('admin.previewlist'))
+        return render_template('admin/preview_add.html', form=form)
+
+    pre=db.session.query(models.Preview).filter_by(id=id).first()
+    form=PreviewForm(data={'title':pre.title,'logo':pre.logo})
+    return render_template('admin/preview_add.html',form=form)
+
+@admin.route('/previewedel/<int:id>')
+def previewedel(id):
+    preview = db.session.query(models.Preview).filter_by(id=id)
+    db.session.query(models.Preview).filter_by(id=id).delete()
+    admin = getAdmin()
+    getOplog(ip=request.remote_addr, admin_id=admin.id,
+             reason='%s删除了预告封面%s' % (admin.name, preview.title))
+    db.session.commit()
+    return redirect(url_for('admin.previewlist'))
 
 
 @admin.route("/previewlist")
