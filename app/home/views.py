@@ -1,12 +1,21 @@
 #coding:utf8
+import os
+
 from . import home
 from flask import render_template,redirect,url_for,request,session
+from werkzeug.utils import secure_filename
 
-
-from .forms import RegForm,LoginForm
+from .forms import RegForm,LoginForm,UserForm
 from app import models
 from  app import db
 
+BASEDIR = os.path.abspath(os.path.dirname(__file__)).strip('\home')
+print(BASEDIR)
+
+file_dir=os.path.join(BASEDIR,'static','avatar')
+
+if not os.path.exists(file_dir):
+    os.makedirs(file_dir)
 def getUser():
     '''
     获取当前登录的会员
@@ -79,9 +88,29 @@ def regist():
     return  render_template('/home/register.html',form=form)
 
 
-@home.route('/user/')
+@home.route('/user/',methods=['GET','POST'])
 def user():
-    return  render_template('/home/user.html')
+    if request.method=='POST':
+        form=UserForm(request.form)
+        file=request.files['avatar']
+        filename=secure_filename(file.filename)
+        file.save(os.path.join(file_dir,filename))
+        data=form.data
+        avatar=data.get('avatar')
+        user=getUser()
+        db.session.query(models.User).filter_by(id=user.id).update({
+            'name':data.get('name'),
+            'pwd':data.get('pwd'),
+            'email':data.get('email'),
+            'phone':data.get('phone'),
+            'avatar':data.get(avatar),
+            'info':data.get('info')
+        })
+        db.session.commit()
+        return redirect(url_for('home.user'))
+    user=getUser()
+    form=UserForm(data={'name':user.name,'email':user.email,'phone':user.phone,'avatar':user.avatar,'info':user.info})
+    return  render_template('/home/user.html',form=form)
 
 @home.route('/changpwd/')
 def changpwd():
