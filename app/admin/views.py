@@ -106,6 +106,7 @@ def index():
     首页
     :return:
     '''
+
     return render_template('admin/index.html')
 
 
@@ -267,8 +268,8 @@ def addmovie():
             f_url=request.files['url']
             url = changeFilename(f_url.filename)
             logo = changeFilename(f_logo.filename)
-            f_logo.save(os.path.join(logo_dir,url))
-            f_url.save(os.path.join(movie_dir,logo))
+            f_logo.save(os.path.join(logo_dir,logo))
+            f_url.save(os.path.join(movie_dir,url))
             movie = models.Movie(
                 title=data.get('title'),
                 url=url,
@@ -371,7 +372,7 @@ def delmovie(id):
     :param id:
     :return:
     '''
-    movie = db.session.query(models.Movie).filter_by(id=id)
+    movie = db.session.query(models.Movie).filter_by(id=id).first()
     db.session.query(models.Movie).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -433,7 +434,7 @@ def previewedit(id):
 
 @admin.route('/previewedel/<int:id>')
 def previewedel(id):
-    preview = db.session.query(models.Preview).filter_by(id=id)
+    preview = db.session.query(models.Preview).filter_by(id=id).first()
     db.session.query(models.Preview).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,

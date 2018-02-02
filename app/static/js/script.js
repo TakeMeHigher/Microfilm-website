@@ -276,6 +276,7 @@ $(function(){
 //五、轮播图-------------------------------------------------------------------------------------
 
 	var len=$(".main_banner li").length;
+
 	var index_2=0;
 	var timer=800;
 	var intervaltimer=0;
@@ -286,7 +287,6 @@ $(function(){
 			isMoving=true;
 			var prev; var next; var hidden;
 			var curr=$("#imgCard"+index_2);//当前正中显示
-
 			if(index_2==0){								//当前正中显示的是第0张时 prev为最后一张
 				prev=$("#imgCard"+(len-1));
 			}else{												//否则  序列号-1

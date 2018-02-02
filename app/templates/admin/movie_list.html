@@ -45,7 +45,7 @@
                                 </tr>
                                 {%for m in movielist %}
                                 <tr>
-                                    <td>{{m.id}}</td>
+                                    <td>{{loop.index}}</td>
                                     <td>{{m.title}}</td>
                                     <td>{{m.length}}</td>
                                     <td>{{tag_names[m.id]}}</td>

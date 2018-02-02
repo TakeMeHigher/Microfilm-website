@@ -34,7 +34,9 @@ def index():
     首页
     :return:
     '''
-    return render_template('/home/index.html')
+    previews = db.session.query(models.Preview).all()
+    print(previews)
+    return render_template('/home/index.html',previews=previews)
 
 
 @home.route('/login/', methods=['GET', 'POST'])
