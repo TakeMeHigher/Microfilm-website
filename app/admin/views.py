@@ -265,7 +265,6 @@ def addmovie():
             print(data)
             f_logo=request.files['logo']
             f_url=request.files['url']
-
             url = changeFilename(f_url.filename)
             logo = changeFilename(f_logo.filename)
             f_logo.save(os.path.join(logo_dir,url))

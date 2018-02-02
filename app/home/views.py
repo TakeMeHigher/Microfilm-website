@@ -154,7 +154,9 @@ def changpwd():
 
 @home.route('/comments/')
 def comments():
-    return render_template('/home/comments.html')
+    user=getUser()
+    comments=db.session.query(models.Comment).join(models.User).filter(models.Comment.user_id==models.User.id).filter(models.User.id==user.id)
+    return render_template('/home/comments.html',comments=comments)
 
 
 @home.route('/loginlog/')

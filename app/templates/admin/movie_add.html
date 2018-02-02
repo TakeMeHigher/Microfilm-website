@@ -39,7 +39,7 @@
                                     <!--<label for="input_logo">封面</label>-->
                                     <!--<input type="file" id="input_logo">-->
                                       {{form.logo.label}} {{form.logo}}{{form.logo.errors[0]}}
-                                    <img data-src="holder.js/262x166" style="margin-top:5px;" class="img-responsive"
+                                    <img data-src="holder.js/262x166" id="logo_img" style="margin-top:5px;" class="img-responsive"
                                          alt="">
                                 </div>
                                 <div class="form-group">
@@ -82,7 +82,6 @@
                                 </div>
                             </div>
                             <div class="box-footer">
-
                                 <button type="submit" class="btn btn-primary">添加</button>
                             </div>
                         </form>
@@ -132,11 +131,24 @@
         $('#input_release_time').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',
-            language: 'zh-CN',
+            language: 'zh-CN'
         });
     });
 
 </script>
+
+<script>
+    //头像预览
+    $("#nput_logo").change(function () {
+        var current_file = $(this)[0].files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(current_file);
+        reader.onload = function () {
+            $('#logo_img')[0].src = this.result
+        }
+    });
+</script>
+
 {% endblock %}
 
 
