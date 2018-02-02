@@ -5,14 +5,16 @@ import datetime
 
 from flask import render_template, redirect, url_for, request, session, flash
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import CombinedMultiDict
 
 import app
 from . import admin
-from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm,AuthForm,RoleForm,AdminForm,PreviewForm
+from  app.admin.forms import LoginForm, MovieForm, TagForm, PwdForm, AuthForm, RoleForm, AdminForm, PreviewForm
 from  app.models import Admin
 from app import models
 from  app import db
 from  app.utils.pager import Pagination
+
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__)).strip('\hadmin')
 print(BASEDIR)
@@ -58,33 +60,34 @@ def check_is_login():
     '''
     if request.path == '/admin/login':
         return None
-    if request.path=='/login':
+    if request.path == '/login':
         return None
-    if  session.get('user'):
-        return  None
+    if session.get('user'):
+        return None
 
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
 
-    admin=db.session.query(models.Admin).filter_by(name=session.get('admin')).first()
+    admin = db.session.query(models.Admin).filter_by(name=session.get('admin')).first()
 
-    role=db.session.query(models.Role).filter_by(id=admin.role_id).first()
+    role = db.session.query(models.Role).filter_by(id=admin.role_id).first()
 
     if '-' in role.auths:
-        auths=list(map(lambda x:int(x),role.auths.split('-')))
+        auths = list(map(lambda x: int(x), role.auths.split('-')))
     else:
-        auths=role.auths
-    urls=[]
+        auths = role.auths
+    urls = []
     for id in auths:
-        url=db.session.query(models.Auth.url).filter_by(id=id).first()
+        url = db.session.query(models.Auth.url).filter_by(id=id).first()
         urls.append(url[0])
 
-    # print(request.url_rule,type(request.url_rule))
-    # print(request.path)
-    # print(urls)
-    # print(str(request.url_rule) in urls)
-    # if str(request.url_rule) not in urls:
-    #     return '无权访问'
+        # print(request.url_rule,type(request.url_rule))
+        # print(request.path)
+        # print(urls)
+        # print(str(request.url_rule) in urls)
+        # if str(request.url_rule) not in urls:
+        #     return '无权访问'
+
 
 def changeFilename(filename):
     '''
@@ -203,7 +206,7 @@ def taglist():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     tags = tags[pageObj.start:pageObj.end]
-    return render_template('admin/tag_list.html', tags=tags,pageObj=pageObj)
+    return render_template('admin/tag_list.html', tags=tags, pageObj=pageObj)
 
 
 @admin.route('/edittag/<int:id>', methods=['GET', 'POST'])
@@ -251,18 +254,22 @@ def addmovie():
     :return:
     '''
     if request.method == 'POST':
-        form = MovieForm(request.form)
+        values=CombinedMultiDict([request.form,request.files])
+        form = MovieForm(values)
+        print(request.form)
+        print(request.files)
+        print(form.data)
+        print(form.errors)
         if form.validate():
-            data = form.data
+            data = request.form
+            print(data)
+            f_logo=request.files['logo']
+            f_url=request.files['url']
 
-            file_url = secure_filename(form.url.data)
-            file_logo = secure_filename(form.logo.data)
-
-            if not os.path.exists(up_url):
-                os.makedirs(up_url)
-                os.chmod(up_url, 'rw')
-            url = changeFilename(file_url)
-            logo = changeFilename(file_logo)
+            url = changeFilename(f_url.filename)
+            logo = changeFilename(f_logo.filename)
+            f_logo.save(os.path.join(logo_dir,url))
+            f_url.save(os.path.join(movie_dir,logo))
             movie = models.Movie(
                 title=data.get('title'),
                 url=url,
@@ -275,7 +282,6 @@ def addmovie():
                 area=data.get('area'),
                 release_time=data.get('release_time'),
                 length=data.get('length'),
-
             )
             db.session.add(movie)
             admin = getAdmin()
@@ -287,6 +293,7 @@ def addmovie():
 
         return render_template('admin/movie_add.html', form=form)
     form = MovieForm()
+    print(form.data)
     return render_template('admin/movie_add.html', form=form)
 
 
@@ -307,7 +314,7 @@ def movielist():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     movielist = movielist[pageObj.start:pageObj.end]
-    return render_template('admin/movie_list.html', movielist=movielist, tag_names=tag_names,pageObj=pageObj)
+    return render_template('admin/movie_list.html', movielist=movielist, tag_names=tag_names, pageObj=pageObj)
 
 
 @admin.route('/editmovie/<int:id>', methods=['GET', 'POST'])
@@ -374,18 +381,19 @@ def delmovie(id):
     return redirect(url_for('admin.movielist'))
 
 
-@admin.route("/previewadd",methods=['GET', 'POST'])
+@admin.route("/previewadd", methods=['GET', 'POST'])
 def previewadd():
-    if request.method=='POST':
-        form=PreviewForm(data=request.form,logo=request.files)
-        print(request.form)
+    if request.method == 'POST':
+        form = PreviewForm(data=request.form, logo=request.files)
+       # print(request.form)
+        print(form.data)
         if form.validate():
-            data=request.form
+            data = request.form
             print(data)
-            f=request.files['logo']
+            f = request.files['logo']
             filename = secure_filename(f.filename)
             f.save(os.path.join(logo_dir, filename))
-            preview=models.Preview(title=data.get('title'),logo=filename)
+            preview = models.Preview(title=data.get('title'), logo=filename)
             db.session.add(preview)
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -394,14 +402,14 @@ def previewadd():
             return redirect(url_for('admin.previewlist'))
         return render_template('admin/preview_add.html', form=form)
 
-    form=PreviewForm()
-    return render_template('admin/preview_add.html',form=form)
+    form = PreviewForm()
+    return render_template('admin/preview_add.html', form=form)
 
 
-@admin.route('/previewedit/<int:id>',methods=['GET', 'POST'])
+@admin.route('/previewedit/<int:id>', methods=['GET', 'POST'])
 def previewedit(id):
-    if request.method=='POST':
-        form=PreviewForm(data=request.form,logo=request.files)
+    if request.method == 'POST':
+        form = PreviewForm(data=request.form, logo=request.files)
         if form.validate():
             data = request.form
             print(data)
@@ -409,8 +417,8 @@ def previewedit(id):
             filename = secure_filename(f.filename)
             f.save(os.path.join(logo_dir, filename))
             db.session.query(models.Preview).filter_by(id=id).update({
-                'title':data.get('title'),
-                'logo':filename
+                'title': data.get('title'),
+                'logo': filename
             })
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -419,9 +427,10 @@ def previewedit(id):
             return redirect(url_for('admin.previewlist'))
         return render_template('admin/preview_add.html', form=form)
 
-    pre=db.session.query(models.Preview).filter_by(id=id).first()
-    form=PreviewForm(data={'title':pre.title,'logo':pre.logo})
-    return render_template('admin/preview_add.html',form=form)
+    pre = db.session.query(models.Preview).filter_by(id=id).first()
+    form = PreviewForm(data={'title': pre.title, 'logo': pre.logo})
+    return render_template('admin/preview_add.html', form=form, pre=pre)
+
 
 @admin.route('/previewedel/<int:id>')
 def previewedel(id):
@@ -436,9 +445,9 @@ def previewedel(id):
 
 @admin.route("/previewlist")
 def previewlist():
-    previews=db.session.query(models.Preview).all()
+    previews = db.session.query(models.Preview).all()
 
-    return render_template('admin/preview_list.html',previews=previews)
+    return render_template('admin/preview_list.html', previews=previews)
 
 
 @admin.route("/userlist")
@@ -484,7 +493,7 @@ def commentlist():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     comments = comments[pageObj.start:pageObj.end]
-    return render_template('admin/comment_list.html', comments=comments,pageObj=pageObj)
+    return render_template('admin/comment_list.html', comments=comments, pageObj=pageObj)
 
 
 @admin.route('/delcomment/<int:id>')
@@ -519,7 +528,7 @@ def moviecol_list():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     moviecols = moviecols[pageObj.start:pageObj.end]
-    return render_template('admin/moviecol_list.html', moviecols=moviecols,pageObj=pageObj)
+    return render_template('admin/moviecol_list.html', moviecols=moviecols, pageObj=pageObj)
 
 
 @admin.route('/delmoviecol/<int:id>')
@@ -554,7 +563,7 @@ def oplog_list():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     oplogs = oplogs[pageObj.start:pageObj.end]
-    return render_template('admin/oplog_list.html', oplogs=oplogs,pageObj=pageObj)
+    return render_template('admin/oplog_list.html', oplogs=oplogs, pageObj=pageObj)
 
 
 @admin.route('/adminloginlog_list')
@@ -563,7 +572,7 @@ def adminloginlog_list():
     管理员登录日志列表
     :return:
     '''
-    adminlogs=db.session.query(models.Adminlog).all()
+    adminlogs = db.session.query(models.Adminlog).all()
 
     current_page = request.args.get('page', 1)
     total_count = len(adminlogs)
@@ -571,7 +580,7 @@ def adminloginlog_list():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     adminlogs = adminlogs[pageObj.start:pageObj.end]
-    return render_template('admin/adminloginlog_list.html',adminlogs=adminlogs,pageObj=pageObj)
+    return render_template('admin/adminloginlog_list.html', adminlogs=adminlogs, pageObj=pageObj)
 
 
 @admin.route('/userloginlog_list')
@@ -580,37 +589,39 @@ def userloginlog_list():
     会员登录日志列表
     :return:
     '''
-    userlogs=db.session.query(models.Userlog).all()
+    userlogs = db.session.query(models.Userlog).all()
     current_page = request.args.get('page', 1)
     total_count = len(userlogs)
     base_url = request.path
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     userlogs = userlogs[pageObj.start:pageObj.end]
-    return render_template('admin/userloginlog_list.html',userlogs=userlogs,pageObj=pageObj)
+    return render_template('admin/userloginlog_list.html', userlogs=userlogs, pageObj=pageObj)
 
 
-@admin.route('/addAuth',methods=['GET', 'POST'])
+@admin.route('/addAuth', methods=['GET', 'POST'])
 def addAuth():
     '''
     添加权限
     :return:
     '''
-    if request.method=='POST':
-        form=AuthForm(request.form)
+    if request.method == 'POST':
+        form = AuthForm(request.form)
+        print(form.data)
         if form.validate():
-            data=form.data
-            auth=models.Auth(name=data.get('name'),url=data.get('url'))
+            data = form.data
+            auth = models.Auth(name=data.get('name'), url=data.get('url'))
             db.session.add(auth)
 
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
-                     reason='%s增加了权限%s' % (admin.name,data.get('name')))
+                     reason='%s增加了权限%s' % (admin.name, data.get('name')))
             db.session.commit()
             return redirect(url_for('admin.authlist'))
         return render_template('admin/addAuth.html', form=form)
-    form=AuthForm()
-    return render_template('admin/addAuth.html',form=form)
+    form = AuthForm()
+    return render_template('admin/addAuth.html', form=form)
+
 
 @admin.route('/authlist')
 def authlist():
@@ -618,36 +629,38 @@ def authlist():
     权限列表
     :return:
     '''
-    auths=db.session.query(models.Auth).all()
+    auths = db.session.query(models.Auth).all()
     current_page = request.args.get('page', 1)
     total_count = len(auths)
     base_url = request.path
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     auths = auths[pageObj.start:pageObj.end]
-    return render_template('admin/authlist.html',auths=auths,pageObj=pageObj)
+    return render_template('admin/authlist.html', auths=auths, pageObj=pageObj)
 
-@admin.route('/editauth/<int:id>',methods=['GET', 'POST'])
+
+@admin.route('/editauth/<int:id>', methods=['GET', 'POST'])
 def editauth(id):
     '''
     编辑权限
     :param id:
     :return:
     '''
-    if request.method=='POST':
-        form=AuthForm(request.form)
+    if request.method == 'POST':
+        form = AuthForm(request.form)
         if form.validate():
-            data=form.data
-            db.session.query(models.Auth).filter_by(id=id).update({'name':data.get('name'),'url':data.get('url')})
+            data = form.data
+            db.session.query(models.Auth).filter_by(id=id).update({'name': data.get('name'), 'url': data.get('url')})
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
                      reason='%s修改了权限%s' % (admin.name, data.get('name')))
             db.session.commit()
             return redirect(url_for('admin.authlist'))
         return render_template('admin/addAuth.html', form=form)
-    auth=db.session.query(models.Auth).filter_by(id=id).first()
-    form=AuthForm(data={'name':auth.name,'url':auth.url})
-    return render_template('admin/addAuth.html',form=form)
+    auth = db.session.query(models.Auth).filter_by(id=id).first()
+    form = AuthForm(data={'name': auth.name, 'url': auth.url})
+    return render_template('admin/addAuth.html', form=form)
+
 
 @admin.route('/delauth/<int:id>')
 def delauth(id):
@@ -656,7 +669,7 @@ def delauth(id):
     :param id:
     :return:
     '''
-    auth=db.session.query(models.Auth).filter_by(id=id)
+    auth = db.session.query(models.Auth).filter_by(id=id).first()
     db.session.query(models.Auth).filter_by(id=id).delete()
     admin = getAdmin()
     getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -665,19 +678,19 @@ def delauth(id):
     return redirect(url_for('admin.authlist'))
 
 
-@admin.route('/addrole',methods=['GET','POST'])
+@admin.route('/addrole', methods=['GET', 'POST'])
 def addrole():
     '''
     添加角色
     :return:
     '''
-    if request.method=='POST':
-        form=RoleForm(request.form)
+    if request.method == 'POST':
+        form = RoleForm(request.form)
         if form.validate():
-            data=form.data
-            role=models.Role(
+            data = form.data
+            role = models.Role(
                 name=data.get('name'),
-                auths='-'.join(map(lambda x:str(x),data.get('auths')))
+                auths='-'.join(map(lambda x: str(x), data.get('auths')))
             )
             db.session.add(role)
             admin = getAdmin()
@@ -686,35 +699,39 @@ def addrole():
             db.session.commit()
             return redirect(url_for('admin.rolelist'))
         return render_template('admin/addrole.html', form=form)
-    form=RoleForm()
-    return render_template('admin/addrole.html',form=form)
+    form = RoleForm()
+    return render_template('admin/addrole.html', form=form)
 
-@admin.route('/editrole/<int:id>',methods=['GET','POST'])
+
+@admin.route('/editrole/<int:id>', methods=['GET', 'POST'])
 def editrole(id):
-    if request.method=='POST':
-        form=RoleForm(request.form)
+    if request.method == 'POST':
+        form = RoleForm(request.form)
         if form.validate():
-            data=form.data
-            db.session.query(models.Role).filter_by(id=id).update({'name':data.get('name'),
-                                                                   'auths':'-'.join(map(lambda x:str(x),data.get('auths') ))})
+            data = form.data
+            db.session.query(models.Role).filter_by(id=id).update({'name': data.get('name'),
+                                                                   'auths': '-'.join(
+                                                                       map(lambda x: str(x), data.get('auths')))})
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
                      reason='%s修改了角色%s' % (admin.name, data.get('name')))
             db.session.commit()
             return redirect(url_for('admin.rolelist'))
         return render_template('admin/addrole.html', form=form)
-    role=db.session.query(models.Role).filter_by(id=id).first()
+    role = db.session.query(models.Role).filter_by(id=id).first()
 
     if '-' in role.auths:
-        auths=list(map(lambda x:int(x),role.auths.split('-')))
+        auths = list(map(lambda x: int(x), role.auths.split('-')))
     else:
-        auths=role.auths
-    form=RoleForm(data={'name':role.name,'auths':auths})
+        auths = role.auths
+    form = RoleForm(data={'name': role.name, 'auths': auths})
     return render_template('admin/addrole.html', form=form)
+
 
 @admin.route('/delrole/<int:id>')
 def delrole(id):
     pass
+
 
 @admin.route('/rolelist')
 def rolelist():
@@ -722,25 +739,25 @@ def rolelist():
     角色列表
     :return:
     '''
-    roles=db.session.query(models.Role).all()
+    roles = db.session.query(models.Role).all()
     current_page = request.args.get('page', 1)
     total_count = len(roles)
     base_url = request.path
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     roles = roles[pageObj.start:pageObj.end]
-    return  render_template('admin/rolelist.html',roles=roles,pageObj=pageObj)
+    return render_template('admin/rolelist.html', roles=roles, pageObj=pageObj)
 
 
-@admin.route('/admin_add',methods=['GET','POST'])
+@admin.route('/admin_add', methods=['GET', 'POST'])
 def admin_add():
-    if request.method=='POST':
-        form=AdminForm(request.form)
+    if request.method == 'POST':
+        form = AdminForm(request.form)
 
         if form.validate():
-            data=form.data
+            data = form.data
 
-            admin=models.Admin(name=data.get('name'),pwd=data.get('pwd'),role_id=int(data.get('role')))
+            admin = models.Admin(name=data.get('name'), pwd=data.get('pwd'), role_id=int(data.get('role')))
             db.session.add(admin)
             admin = getAdmin()
             getOplog(ip=request.remote_addr, admin_id=admin.id,
@@ -748,17 +765,17 @@ def admin_add():
             db.session.commit()
             return redirect(url_for('admin.admin_list'))
         return render_template('admin/admin_add.html', form=form)
-    form=AdminForm()
-    return render_template('admin/admin_add.html',form=form)
+    form = AdminForm()
+    return render_template('admin/admin_add.html', form=form)
 
 
 @admin.route('/admin_list')
 def admin_list():
-    admins=db.session.query(models.Admin).all()
+    admins = db.session.query(models.Admin).all()
     current_page = request.args.get('page', 1)
     total_count = len(admins)
     base_url = request.path
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     admins = admins[pageObj.start:pageObj.end]
-    return render_template('admin/admin_list.html',admins=admins,pageObj=pageObj)
+    return render_template('admin/admin_list.html', admins=admins, pageObj=pageObj)

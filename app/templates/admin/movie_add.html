@@ -15,7 +15,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">添加电影</h3>
                         </div>
-                        <form role="form" method="post">
+                        <form role="form" method="post" enctype="multipart/form-data">
                             <div class="box-body">
                                 <div class="form-group">
                                     <!--<label for="input_title">{{form.title.label}}</label>-->
@@ -82,8 +82,8 @@
                                 </div>
                             </div>
                             <div class="box-footer">
-                                {{form.submit}}
-                                <!--<button type="submit" class="btn btn-primary">添加</button>-->
+
+                                <button type="submit" class="btn btn-primary">添加</button>
                             </div>
                         </form>
                     </div>

@@ -132,11 +132,6 @@ class MovieForm(Form):
         render_kw={'class': "form-control", 'id': "input_release_time", 'placeholder': "请输入上映时间！"}
     )
 
-    submit = simple.SubmitField(
-        label='提交',
-        widget=widgets.SubmitInput(),
-        render_kw={'id': "btn-sub", 'class': 'btn btn-primary btn-block btn-flat'}
-    )
 
 
 

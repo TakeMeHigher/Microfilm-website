@@ -30,9 +30,13 @@
 
                                      {{form.logo.label}} {{form.logo}}{{form.logo.errors[0]}}
 
-
-                                    <img   data-src="holder.js/700x320" style="margin-top:5px;width:60px;height:35px" class="img-responsive"
+                                    {% if pre %}
+                                    <img   data-src="holder.js/700x320" src="/static/logo/{{pre.logo}}" style="margin-top:5px" class="img-responsive"
                                         id="logoimg" name="logo" alt="">
+                                    {% else %}
+                                       <img   data-src="holder.js/700x320"  style="margin-top:5px;" class="img-responsive"
+                                        id="logoimg" name="logo" alt="">
+                                    {%endif%}
 
 
                                 </div>
