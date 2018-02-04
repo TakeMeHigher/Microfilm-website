@@ -223,7 +223,7 @@ def search():
     parmas = request.args.to_dict()
     pageObj = Pagination(current_page, total_count, base_url, parmas)
     movies = movies[pageObj.start:pageObj.end]
-    return render_template('/home/search.html',key=key,movies=movies,pageObj=pageObj)
+    return render_template('/home/search.html',key=key,movies=movies,pageObj=pageObj,total_count=total_count)
 
 @home.route('/loginlog/')
 def loginlog():
