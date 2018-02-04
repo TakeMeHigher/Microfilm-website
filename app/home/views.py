@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 from .forms import RegForm, LoginForm, UserForm, PwdForm
 from app import models
 from  app import db
+from app.utils.pager import Pagination
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__)).strip('\home')
 print(BASEDIR)
@@ -58,8 +59,36 @@ def index():
     '''
     previews = db.session.query(models.Preview).all()
     tags=db.session.query(models.Tag).all()
+    tid=request.args.get("tid",0)
+    star=request.args.get("star",0)
+    time=request.args.get("time",0)
+    pm=request.args.get("pm",0)
+    cm=request.args.get("cm",0)
+    p=dict(
+        tid=tid,
+        star=star,
+        time=time,
+        pm=pm,
+        cm=cm
+    )
+    movies=None
+    if int(tid)!=0 and int(star)==0:
+       movies=db.session.query(models.Movie).filter_by(tag_id=int(tid)).all()
+       print(movies,'---------')
+    if int(star)!=0 and int(tid)==0:
+        movies=db.session.query(models.Movie).filter_by(star=int(star)).all()
+    if int(star) != 0 and int(tid) != 0:
+        movies = db.session.query(models.Movie).filter_by(star=int(star),tag_id=int(tid)).all()
+    if int(tid)==0 and int(star)==0:
+        movies=db.session.query(models.Movie).all()
+    current_page = request.args.get('page', 1)
+    total_count = len(movies)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    movies = movies[pageObj.start:pageObj.end]
 
-    return render_template('/home/index.html',previews=previews,tags=tags)
+    return render_template('/home/index.html',previews=previews,tags=tags,p=p,movies=movies,pageObj=pageObj)
 
 
 @home.route('/login/', methods=['GET', 'POST'])
