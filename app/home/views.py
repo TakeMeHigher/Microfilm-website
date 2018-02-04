@@ -19,25 +19,25 @@ if not os.path.exists(file_dir):
     os.makedirs(file_dir)
 
 
-# @home.before_request
-# def check_is_login():
-#     '''
-#     检测是否登录了
-#     :return:
-#     '''
-#     if request.path == '/login/':
-#         return None
-#     if request.path == '/logout/':
-#         return None
-#     if request.path == '/regist/':
-#         return None
-#     if request.path=='/':
-#         return  None
-#     if session.get('user'):
-#         return None
-#     if not session.get('user'):
-#         return redirect(url_for('home.login'))
-#
+@home.before_request
+def check_is_login():
+    '''
+    检测是否登录了
+    :return:
+    '''
+    if request.path == '/login/':
+        return None
+    if request.path == '/logout/':
+        return None
+    if request.path == '/regist/':
+        return None
+    if request.path=='/':
+        return  None
+    if session.get('user'):
+        return None
+    if not session.get('user'):
+        return redirect(url_for('home.login'))
+
 
 
 
@@ -208,13 +208,20 @@ def changpwd():
 
 @home.route('/comments/')
 def comments():
+    '''
+    展示当前登录用户的评论
+    :return:
+    '''
     user=getUser()
     comments=db.session.query(models.Comment).join(models.User).filter(models.Comment.user_id==models.User.id).filter(models.User.id==user.id)
     return render_template('/home/comments.html',comments=comments)
 
 @home.route('/search/')
 def search():
-
+    '''
+    根据电影名称搜索电影并实现分页和计数
+    :return:
+    '''
     key=request.args.get('key',0)
     movies=db.session.query(models.Movie).filter(models.Movie.title.like('{}%'.format(key))).all()
     current_page = request.args.get('page', 1)
@@ -234,3 +241,9 @@ def loginlog():
 @home.route('/moviecol/')
 def moviecol():
     return render_template('/home/moviecol.html')
+
+@home.route('/play/<int:id>')
+def play(id):
+    movie=db.session.query(models.Movie).filter_by(id=id).first()
+    # commits=db.session.query(models.Comment).filter_by()
+    return render_template('/home/play.html',movie=movie)
