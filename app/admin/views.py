@@ -60,11 +60,6 @@ def check_is_login():
     '''
     if request.path == '/admin/login':
         return None
-    if request.path == '/login':
-        return None
-    if session.get('user'):
-        return None
-
     if not session.get('admin'):
         return redirect(url_for('admin.login'))
 
@@ -85,8 +80,8 @@ def check_is_login():
         # print(request.path)
         # print(urls)
         # print(str(request.url_rule) in urls)
-        # if str(request.url_rule) not in urls:
-        #     return '无权访问'
+        if str(request.url_rule) not in urls:
+            return '无权访问'
 
 
 def changeFilename(filename):

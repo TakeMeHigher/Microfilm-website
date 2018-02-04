@@ -24,14 +24,20 @@ def check_is_login():
     检测是否登录了
     :return:
     '''
-    if request.path == '/login':
+    if request.path == '/login/':
         return None
-    if request.path == '/logout':
+    if request.path == '/logout/':
         return None
+    if request.path == '/regist/':
+        return None
+    if request.path=='/':
+        return  None
     if session.get('user'):
         return None
+    if not session.get('user'):
+        return redirect(url_for('home.login'))
 
-    return redirect(url_for('home.login'))
+
 
 
 def getUser():
@@ -51,8 +57,8 @@ def index():
     :return:
     '''
     previews = db.session.query(models.Preview).all()
-    print(previews)
-    return render_template('/home/index.html',previews=previews)
+    tags=db.session.query(models.Tag).all()
+    return render_template('/home/index.html',previews=previews,tags=tags)
 
 
 @home.route('/login/', methods=['GET', 'POST'])

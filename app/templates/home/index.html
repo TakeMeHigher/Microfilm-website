@@ -25,15 +25,10 @@
                     <tr>
                         <td style="width:10%;">电影标签</td>
                         <td style="width:90%;">
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
+                            {% for tag in tags %}
+                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;{{tag.name}}</a>
+                            &nbsp;{% endfor %}
+
                     </tr>
                     <tr>
                         <td>电影星级</td>
