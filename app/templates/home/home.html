@@ -46,9 +46,9 @@
         <div class="navbar-collapse collapse">
             <form class="navbar-form navbar-left" role="search" style="margin-top:18px;">
                 <div class="form-group input-group">
-                    <input type="text" class="form-control" placeholder="请输入电影名！">
+                    <input type="text" class="form-control" id="input_movie" placeholder="请输入电影名！">
                     <span class="input-group-btn">
-                        <a class="btn btn-default" href=""><span class="glyphicon glyphicon-search"></span>&nbsp;搜索</a>
+                        <a class="btn btn-default" id="search_btn" ><span class="glyphicon glyphicon-search" ></span>&nbsp;搜索</a>
                     </span>
                 </div>
             </form>
@@ -113,8 +113,16 @@
             effect: "fadeIn"
         });
     });
+     $("#search_btn").click(function () {
 
+            var key=$('#input_movie').val();
+
+            location.href="{{url_for('home.search')}}?key="+key
+        })
 </script>
+
+
+
 
 {%block js%}{%endblock%}
 </body>

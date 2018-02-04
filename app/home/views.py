@@ -19,25 +19,25 @@ if not os.path.exists(file_dir):
     os.makedirs(file_dir)
 
 
-@home.before_request
-def check_is_login():
-    '''
-    检测是否登录了
-    :return:
-    '''
-    if request.path == '/login/':
-        return None
-    if request.path == '/logout/':
-        return None
-    if request.path == '/regist/':
-        return None
-    if request.path=='/':
-        return  None
-    if session.get('user'):
-        return None
-    if not session.get('user'):
-        return redirect(url_for('home.login'))
-
+# @home.before_request
+# def check_is_login():
+#     '''
+#     检测是否登录了
+#     :return:
+#     '''
+#     if request.path == '/login/':
+#         return None
+#     if request.path == '/logout/':
+#         return None
+#     if request.path == '/regist/':
+#         return None
+#     if request.path=='/':
+#         return  None
+#     if session.get('user'):
+#         return None
+#     if not session.get('user'):
+#         return redirect(url_for('home.login'))
+#
 
 
 
@@ -212,6 +212,18 @@ def comments():
     comments=db.session.query(models.Comment).join(models.User).filter(models.Comment.user_id==models.User.id).filter(models.User.id==user.id)
     return render_template('/home/comments.html',comments=comments)
 
+@home.route('/search/')
+def search():
+
+    key=request.args.get('key',0)
+    movies=db.session.query(models.Movie).filter(models.Movie.title.like('{}%'.format(key))).all()
+    current_page = request.args.get('page', 1)
+    total_count = len(movies)
+    base_url = request.path
+    parmas = request.args.to_dict()
+    pageObj = Pagination(current_page, total_count, base_url, parmas)
+    movies = movies[pageObj.start:pageObj.end]
+    return render_template('/home/search.html',key=key,movies=movies,pageObj=pageObj)
 
 @home.route('/loginlog/')
 def loginlog():
