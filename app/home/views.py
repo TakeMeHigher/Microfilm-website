@@ -58,6 +58,7 @@ def index():
     '''
     previews = db.session.query(models.Preview).all()
     tags=db.session.query(models.Tag).all()
+
     return render_template('/home/index.html',previews=previews,tags=tags)
 
 
