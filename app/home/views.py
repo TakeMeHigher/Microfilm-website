@@ -18,6 +18,22 @@ if not os.path.exists(file_dir):
     os.makedirs(file_dir)
 
 
+@home.before_request
+def check_is_login():
+    '''
+    检测是否登录了
+    :return:
+    '''
+    if request.path == '/login':
+        return None
+    if request.path == '/logout':
+        return None
+    if session.get('user'):
+        return None
+
+    return redirect(url_for('home.login'))
+
+
 def getUser():
     '''
     获取当前登录的会员
