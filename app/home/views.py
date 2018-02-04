@@ -250,6 +250,11 @@ def play(id):
     return render_template('/home/play.html',movie=movie)
 @home.route('/movieComment/<int:id>',methods=['GET', 'POST'])
 def movieComment(id):
+    '''
+    电影评论
+    :param id:
+    :return:
+    '''
     content=request.form.get('content')
     response={'status':False,'msg':'','content':'','addtime':''}
     user=getUser()
