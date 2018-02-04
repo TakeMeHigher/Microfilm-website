@@ -1,5 +1,6 @@
 # coding:utf8
 import os
+import json
 
 from . import home
 from flask import render_template, redirect, url_for, request, session
@@ -247,3 +248,22 @@ def play(id):
     movie=db.session.query(models.Movie).filter_by(id=id).first()
     # commits=db.session.query(models.Comment).filter_by()
     return render_template('/home/play.html',movie=movie)
+@home.route('/movieComment/<int:id>',methods=['GET', 'POST'])
+def movieComment(id):
+    content=request.form.get('content')
+    response={'status':False,'msg':'','content':'','addtime':''}
+    user=getUser()
+    if  content:
+        comment=models.Comment(content=content,user_id=user.id,movie_id=id)
+        db.session.add(comment)
+        db.session.commit()
+        response['msg']='添加成功'
+        response['status']=True
+        response['content']=comment.content
+        response['addtime']=str(comment.addtime)
+    else:
+        response['msg']='不能提交空内容'
+
+    print(content)
+
+    return json.dumps(response)

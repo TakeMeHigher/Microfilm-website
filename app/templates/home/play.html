@@ -75,7 +75,7 @@
                                 <span class="glyphicon glyphicon-picture"></span>&nbsp;影片介绍
                             </td>
                             <td>
-                          {{movie.info}}
+                                {{movie.info}}
                             </td>
                         </tr>
                     </table>
@@ -117,7 +117,8 @@
                         <li class="item cl">
                             <a href="user.html">
                                 <i class="avatar size-L radius">
-                                    <img alt="50x50" src="holder.js/50x50" class="img-circle" style="border:1px solid #abcdef;">
+                                    <img alt="50x50" src="holder.js/50x50" class="img-circle"
+                                         style="border:1px solid #abcdef;">
                                 </i>
                             </a>
                             <div class="comment-main">
@@ -125,7 +126,8 @@
                                     <div class="comment-meta">
                                         <a class="comment-author" href="user.html">{{c.user.name}}</a>
                                         评论于
-                                        <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">{{c.addtime}}</time>
+                                        <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">{{c.addtime}}
+                                        </time>
                                     </div>
                                 </header>
                                 <div class="comment-body">
@@ -133,7 +135,7 @@
                                 </div>
                             </div>
                         </li>
-                       {% endfor %}
+                        {% endfor %}
                     </ul>
                     <div class="col-md-12 text-center">
                         <nav aria-label="Page navigation">
@@ -173,53 +175,100 @@
 
 <script src="../static/jwplayer/jwplayer.js"></script>
 <script>
-var ue = UE.getEditor('input_content',{
-    toolbars: [
-        ['fullscreen', 'emotion', 'preview', 'link']
-    ],
-    initialFrameWidth:"100%",
-    initialFrameHeight:"100",
-});
+    var ue = UE.getEditor('input_content', {
+        toolbars: [
+            ['fullscreen', 'emotion', 'preview', 'link']
+        ],
+        initialFrameWidth: "100%",
+        initialFrameHeight: "100",
+    });
 </script>
 <script type="text/javascript">
-	jwplayer.key = "P9VTqT/X6TSP4gi/hy1wy23BivBhjdzVjMeOaQ==";
+    jwplayer.key = "P9VTqT/X6TSP4gi/hy1wy23BivBhjdzVjMeOaQ==";
 </script>
 <script type="text/javascript">
-	jwplayer("moviecontainer").setup({
-		flashplayer: "../static/jwplayer/jwplayer.flash.swf",
-		playlist: [{
-			file: "../static/video/{{movie.url}}",
-			title: "{{movie.title}}"
-		}],
-		modes: [{
-			type: "html5"
-		}, {
-			type: "flash",
-			src: "../static/jwplayer/jwplayer.flash.swf"
-		}, {
-			type: "download"
-		}],
-		skin: {
-			name: "vapor"
-		},
-		"playlist.position": "left",
-		"playlist.size": 400,
-		height: 500,
-		width: 774,
-	});
+    jwplayer("moviecontainer").setup({
+        flashplayer: "../static/jwplayer/jwplayer.flash.swf",
+        playlist: [{
+            file: "../static/video/{{movie.url}}",
+            title: "{{movie.title}}"
+        }],
+        modes: [{
+            type: "html5"
+        }, {
+            type: "flash",
+            src: "../static/jwplayer/jwplayer.flash.swf"
+        }, {
+            type: "download"
+        }],
+        skin: {
+            name: "vapor"
+        },
+        "playlist.position": "left",
+        "playlist.size": 400,
+        height: 500,
+        width: 774,
+    });
 </script>
 <!--播放页面-->
 <script>
-    $(function() {
+    $(function () {
         new WOW().init();
     })
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("img.lazy").lazyload({
             effect: "fadeIn"
         });
+
+        $('#btn-sub').click(function () {
+            content=$('#input_content').val();
+            alert(content)
+            $.ajax({
+                type:'post',
+                url:"{{url_for('home.movieComment',id=movie.id)}}",
+                data:{
+                    content:content
+                },
+                success:function (data) {
+                    data=JSON.parse(data);
+                    content=data['content'];
+                    addtime=data['addtime'];
+
+                    if (data.status){
+                        str='<li class="item cl">\n' +
+                            '                            <a href="user.html">\n' +
+                            '                                <i class="avatar size-L radius">\n' +
+                            '                                    <img alt="50x50" src="holder.js/50x50" class="img-circle"\n' +
+                            '                                         style="border:1px solid #abcdef;">\n' +
+                            '                                </i>\n' +
+                            '                            </a>\n' +
+                            '                            <div class="comment-main">\n' +
+                            '                                <header class="comment-header">\n' +
+                            '                                    <div class="comment-meta">\n' +
+                            '                                        <a class="comment-author" href="user.html">{{session.get("user")}}</a>\n' +
+                            '                                        评论于\n' +
+                            '                                        <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">"'+addtime+'"\n' +
+                            '                                        </time>\n' +
+                            '                                    </div>\n' +
+                            '                                </header>\n' +
+                            '                                <div class="comment-body">\n' +
+                            '                                    <p>"'+content+'"</p>\n' +
+                            '                                </div>\n' +
+                            '                            </div>\n' +
+                            '                        </li>';
+
+                         $('.commentList').append(str)
+                    }
+
+                }
+                }
+            )
+        })
     });
+
+
 </script>
 {%endblock%}
 
